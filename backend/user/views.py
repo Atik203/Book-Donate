@@ -49,8 +49,8 @@ class RegistrationViewSet(APIView):
                 confirm_link = 'http://127.0.0.1:8000' + reverse('activate', args=[uid, token])
                 send_confirm_email(confirm_link,'Confirm Email','confirm_email.html',user.email)
                 return Response({'success': True, 'message': 'Account created successfully. Please confirm your email to login'})
-        except:
-            return Response({'error':"Error something"})    
+        except Exception as e:
+            return Response({'error':str(e)})    
         return Response(serializer.errors)
     
 def activate(request, uidb64, token):
@@ -91,8 +91,8 @@ class LoginViewSet(APIView):
                     return Response({'token': token.key, 'user': user_data })
                 else:
                     return Response({'error': 'Invalid credentials'})
-        except:
-            return Response({'error':"Error something"})    
+        except Exception as e:
+            return Response({'error': str(e)})    
         return Response(serializer.errors)
     
 

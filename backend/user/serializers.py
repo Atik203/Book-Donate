@@ -39,6 +39,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'error': 'email already exists'})
         if(User.objects.filter(username = username).exists()):
             raise serializers.ValidationError({'error': 'username already exists'})
+        if(BookUser.objects.filter(phone = phone).exists()):
+            raise serializers.ValidationError({'error': 'phone already exists'})
         
         account = User(username = username, email = email, first_name = first_name, last_name = last_name)
         account.set_password(password)
