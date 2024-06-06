@@ -5,6 +5,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework import viewsets
@@ -45,11 +46,11 @@ class RegistrationViewSet(APIView):
                 user.is_active = False
                 token = default_token_generator.make_token(user)
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
-                confirm_link = f'http://127.0.0.1:8000/user/active/{uid}/{token}'
+                confirm_link = 'http://127.0.0.1:8000' + reverse('activate', args=[uid, token])
                 send_confirm_email(confirm_link,'Confirm Email','confirm_email.html',user.email)
                 return Response({'success': True, 'message': 'Account created successfully. Please confirm your email to login'})
         except:
-            return Response(serializer.errors)    
+            return Response({'error':"Error something"})    
         return Response(serializer.errors)
     
 def activate(request, uidb64, token):

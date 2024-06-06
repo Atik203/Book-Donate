@@ -11,7 +11,7 @@ router.register('list', BookUserViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', RegistrationViewSet.as_view(), name = 'register'),
-    path('active/<uidb64>/<token>/', activate),
+    path('active/<uidb64>/<token>/', activate,name='activate'),
     path('login/', LoginViewSet.as_view(), name = 'login'),
     path('logout/', LogOutViewSet.as_view(), name = 'logout'),
 ]
