@@ -33,7 +33,7 @@ export default function NavbarComponent() {
 
   const handleLogout = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    axiosPublic.get("/patient/logout/").then((res) => {
+    axiosPublic.get("/user/logout/").then((res) => {
       dispatch(logout());
     });
   };
@@ -77,13 +77,9 @@ export default function NavbarComponent() {
         />
         <NavbarBrand>
           <RouterLink to="/" className="flex items-center">
-            <img
-              src="../../../public/smartcare.svg"
-              alt=""
-              className="w-10/12"
-            />
-            <p className="marck-script-regular text-[#222C8D] md:text-3xl text-2xl lg:text-4xl">
-              Smart<span className="text-[#3B37D7]">Care</span>
+            <img src="../../../public/logo.png" alt="" className="h-12 w-12" />
+            <p className="font-bold md:text-3xl text-2xl lg:text-4xl">
+              Book<span className="text-navPrimary">Donate</span>
             </p>
           </RouterLink>
         </NavbarBrand>
@@ -113,6 +109,21 @@ export default function NavbarComponent() {
         </NavbarItem>
       </NavbarContent>
       <NavbarMenu>
+        {user && (
+          <NavbarMenuItem>
+            <div className="gems-style w-28 flex justify-center gap-3 py-2 px-3 items-center rounded-full">
+              <div>
+                <img
+                  src="https://web.programming-hero.com/static/media/gem.8e6eff96.svg"
+                  className="h-6 w-6"
+                />
+              </div>
+              <div>
+                <p className="font-bold text-xl">10</p>
+              </div>
+            </div>
+          </NavbarMenuItem>
+        )}
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <RouterLink
@@ -203,9 +214,8 @@ export default function NavbarComponent() {
                 as="button"
                 className="transition-transform"
                 color="secondary"
-                name="Jason Hughes"
                 size="sm"
-                src={image || "https://i.pravatar.cc/150?u=a042581f4e29026704d"}
+                src={image as string}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -225,6 +235,19 @@ export default function NavbarComponent() {
           </Dropdown>
         ) : (
           <div className="flex items-center justify-end gap-6">
+            {user && (
+              <div className="gems-style flex justify-center gap-3 py-3 px-4 items-center rounded-full border-2">
+                <div>
+                  <img
+                    src="https://web.programming-hero.com/static/media/gem.8e6eff96.svg"
+                    className="h-6 w-6"
+                  />
+                </div>
+                <div>
+                  <p className="font-bold text-xl">10</p>
+                </div>
+              </div>
+            )}
             <NavbarItem>
               <RouterLink
                 to={"/sign-up"}

@@ -27,7 +27,7 @@ const Login = () => {
     const password = data.password;
 
     axiosPublic
-      .post("/patient/login/", { username: username, password: password })
+      .post("/user/login/", { username: username, password: password })
       .then((res) => {
         dispatch(login(res.data));
         navigate("/");
