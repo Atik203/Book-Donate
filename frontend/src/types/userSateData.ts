@@ -5,6 +5,7 @@ export interface TUser {
   last_name: string | null;
   phone: string | null;
   username: string | null;
+  reward_point: number;
 }
 
 export interface UserState {

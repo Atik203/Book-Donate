@@ -9,7 +9,7 @@ import {
 const Footer = () => {
   return (
     <footer
-      className="footer p-8 md:p-10 lg:p-20 text-white"
+      className="footer p-8 md:p-10 lg:p-20 text-black"
       style={{
         backgroundImage: `url('/footerSvg.svg')`,
         backgroundPosition: "center",

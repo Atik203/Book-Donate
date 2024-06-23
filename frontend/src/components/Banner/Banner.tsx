@@ -18,9 +18,9 @@ const Banner = () => {
         </div>
         <div className="md:relative md:w-1/2 md:-mt-[7px] lg:mt-[9px]">
           <img
-            src="/banner.png"
+            src="/banner.jpg"
             alt=""
-            className="md:absolute md:-top-20 lg:-top-40 w-10/12 mx-auto md:w-full lg:w-11/12"
+            className="md:absolute md:-top-20 lg:-top-16 w-10/12 mx-auto md:w-full lg:w-11/12"
           />
         </div>
       </div>

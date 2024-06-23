@@ -25,10 +25,10 @@ export default function NavbarComponent() {
   const dispatch = useDispatch();
 
   const user: TUser | null = userState.user;
-  let username, first_name, last_name, image, email;
+  let username, first_name, last_name, image, email, reward_point;
 
   if (user) {
-    ({ username, first_name, last_name, image, email } = user);
+    ({ username, first_name, last_name, image, email, reward_point } = user);
   }
 
   const handleLogout = () => {
@@ -119,7 +119,7 @@ export default function NavbarComponent() {
                 />
               </div>
               <div>
-                <p className="font-bold text-xl">10</p>
+                <p className="font-bold text-xl">{reward_point}</p>
               </div>
             </div>
           </NavbarMenuItem>
@@ -205,7 +205,19 @@ export default function NavbarComponent() {
             Contact Us
           </RouterLink>
         </NavbarItem>
-
+        {user && (
+          <div className="gems-style flex justify-center gap-3 py-3 px-4 items-center rounded-full border-2">
+            <div>
+              <img
+                src="https://web.programming-hero.com/static/media/gem.8e6eff96.svg"
+                className="h-6 w-6"
+              />
+            </div>
+            <div>
+              <p className="font-bold text-xl">{reward_point}</p>
+            </div>
+          </div>
+        )}
         {user ? (
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
@@ -235,19 +247,6 @@ export default function NavbarComponent() {
           </Dropdown>
         ) : (
           <div className="flex items-center justify-end gap-6">
-            {user && (
-              <div className="gems-style flex justify-center gap-3 py-3 px-4 items-center rounded-full border-2">
-                <div>
-                  <img
-                    src="https://web.programming-hero.com/static/media/gem.8e6eff96.svg"
-                    className="h-6 w-6"
-                  />
-                </div>
-                <div>
-                  <p className="font-bold text-xl">10</p>
-                </div>
-              </div>
-            )}
             <NavbarItem>
               <RouterLink
                 to={"/sign-up"}
