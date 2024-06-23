@@ -7,13 +7,12 @@ const Banner = () => {
       >
         <div className=" md:w-1/2 p-3 my-auto md:p-4 lg:p-8">
           <h1 className="text-navPrimary font-extrabold text-3xl md:text-4xl lg:text-5xl">
-            Providing Quality Healthcare
+            Donate Books, Earn Rewards
           </h1>
-          <p className="text-[#000000B3] md:text-lg lg:text-xl mt-4">
-            At SmartCare, we believe in prioritizing your health above all. Our
-            mission is to provide quality healthcare services that are easily
-            accessible and personalized to your needs. Experience the future of
-            healthcare with us.
+          <p className="font-medium md:text-lg lg:text-xl mt-4">
+            At BookDonate, your generosity is rewarded. Donate books to earn
+            points and redeem them for exciting gifts. Join us in spreading
+            knowledge and enjoy exclusive rewards.
           </p>
         </div>
         <div className="md:relative md:w-1/2 md:-mt-[7px] lg:mt-[9px]">

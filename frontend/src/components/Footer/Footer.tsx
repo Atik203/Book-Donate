@@ -18,7 +18,7 @@ const Footer = () => {
       }}
     >
       <aside>
-        <h4 className="text-lg">Copyright © Smartcare. All Rights Reserved</h4>
+        <h4 className="text-lg">Copyright © BookDonate. All Rights Reserved</h4>
         <p className="text-xl font-bold">Follow Us:</p>
         <div className="flex items-center justify-center gap-3 cursor-pointer">
           <FaFacebook className="text-2xl" />
