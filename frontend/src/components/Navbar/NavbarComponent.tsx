@@ -153,9 +153,9 @@ export default function NavbarComponent() {
     >
       <NavbarBrand>
         <RouterLink to="/" className="flex items-center gap-1">
-          <img src="../../../public/smartcare.svg" alt="" />
-          <p className="marck-script-regular text-[#222C8D] md:text-3xl text-2xl lg:text-4xl">
-            Smart<span className="text-[#3B37D7]">Care</span>
+          <img src="../../../public/logo.png" alt="" className="h-16 w-16" />
+          <p className="font-bold tracking-wider md:text-3xl text-2xl lg:text-4xl">
+            Book<span className="text-navPrimary">Donate</span>
           </p>
         </RouterLink>
       </NavbarBrand>

@@ -108,7 +108,7 @@ const Login = () => {
         <Button
           type="submit"
           isDisabled={password === ""}
-          className="w-32 font-bold h-12 mx-auto bg-[#06ABA1] text-white rounded-full flex items-center hover:bg-gray-300 hover:text-black"
+          className="w-32 font-bold h-12 mx-auto bg-navPrimary text-white rounded-full flex items-center hover:bg-gray-400 hover:text-black"
         >
           Login
         </Button>

@@ -10,7 +10,8 @@ export default {
   theme: {
     extend: {
       colors:{
-        navPrimary: "#007E85",
+        navPrimary: "#FB8C00",
+        navSecondary: "#7FB432",
       }
     },
   },

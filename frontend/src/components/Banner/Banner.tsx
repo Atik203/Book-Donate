@@ -1,15 +1,6 @@
 const Banner = () => {
-  const user: object | null = {
-    name: "Atikur Rahman",
-  };
-
   return (
     <div className="mt-10 md:mt-12 lg:mt-28 mb-8">
-      {user && (
-        <h1 className="px-3 my-2 text-xl md:text-2xl lg:text-3xl font-bold">
-          Hello, Mr. <span className="text-navPrimary">Atikur</span>
-        </h1>
-      )}
       <div
         className="md:relative py-4 md:p-0 w-full md:h-[348px] lg:h-[500px] flex flex-col-reverse md:flex-row justify-center gap-6 bg-cover bg-center"
         style={{ backgroundImage: `url('/bannerSvg.svg')` }}
