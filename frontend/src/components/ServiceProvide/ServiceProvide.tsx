@@ -23,7 +23,7 @@ const ServiceProvide = () => {
   return (
     <div className="mx-auto relative my-20">
       <TitleDescriptionBlock
-        title="Services We Provide"
+        title="Our Popular Books"
         description="At Smart Care, we are committed to providing a wide range of services designed to ensure your well-being and comfort."
       />
       {isLoading || isFetching ? (
