@@ -19,8 +19,8 @@ import ErrorComponent from "../ErrorComponent/ErrorComonent";
 import { ListboxWrapper } from "../ListBoxWrapper/ListBoxWrapper";
 
 const Doctors = () => {
-  const filters: string[] = ["Name", "Designation", "Specialization"];
-  const [selectedKeys, setSelectedKeys] = useState(new Set(["Filter Doctors"]));
+  const filters: string[] = ["Genre", "Condition", "Status"];
+  const [selectedKeys, setSelectedKeys] = useState(new Set(["Filter Books"]));
   const selectedValue = useMemo(
     () => Array.from(selectedKeys).join(", "),
     [selectedKeys]
