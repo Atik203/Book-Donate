@@ -21,13 +21,14 @@ const Service = () => {
   if (error instanceof Error) {
     return <ErrorComponent message={error.message} />;
   }
+
   return (
     <div className="mx-auto my-10 md:my-16">
       <Helmet>
         <title>Service</title>
       </Helmet>
       <TitleDescriptionBlock
-        title="Our Services"
+        title="All Books"
         description="We provide the best services in the industry. Check out our services below."
       />
       {isFetching || isLoading ? (

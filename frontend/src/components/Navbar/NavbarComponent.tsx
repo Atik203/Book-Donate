@@ -56,13 +56,13 @@ export default function NavbarComponent() {
   const menuItems = user
     ? [
         "Home",
-        "Service",
+        "Books",
         "Contact Us",
         "My Profile",
         "My Appointments",
         "Log Out",
       ]
-    : ["Home", "Service", "Contact Us"];
+    : ["Home", "Books", "Contact Us"];
 
   return isMobile ? (
     <Navbar
@@ -181,16 +181,14 @@ export default function NavbarComponent() {
             Home
           </RouterLink>
         </NavbarItem>
-        <NavbarItem isActive={location.pathname === "/service"}>
+        <NavbarItem isActive={location.pathname === "/books"}>
           <RouterLink
-            to={"/service"}
+            to={"/books"}
             className={
-              location.pathname === "/service"
-                ? "text-navPrimary"
-                : "text-black"
+              location.pathname === "/books" ? "text-navPrimary" : "text-black"
             }
           >
-            Service
+            Books
           </RouterLink>
         </NavbarItem>
         <NavbarItem isActive={location.pathname === "/contact-us"}>
@@ -203,6 +201,18 @@ export default function NavbarComponent() {
             }
           >
             Contact Us
+          </RouterLink>
+        </NavbarItem>
+        <NavbarItem isActive={location.pathname === "/about-us"}>
+          <RouterLink
+            to={"/about-us"}
+            className={
+              location.pathname === "/about-us"
+                ? "text-navPrimary"
+                : "text-black"
+            }
+          >
+            About Us
           </RouterLink>
         </NavbarItem>
         {user && (

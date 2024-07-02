@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import TitleDescriptionBlock from "../../components/TitleDescriptionBlock/TitleDescriptionBlock";
 
 const ContactUs = () => {
   return (
@@ -6,7 +7,10 @@ const ContactUs = () => {
       <Helmet>
         <title>Contact Us</title>
       </Helmet>
-      <h1>Contact us</h1>
+      <TitleDescriptionBlock
+        title="contact us"
+        description="Contact us for any queries. We are here to help you. Fill the form below."
+      />
     </div>
   );
 };
