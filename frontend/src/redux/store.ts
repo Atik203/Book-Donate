@@ -1,19 +1,37 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { api } from "./api/baseApi";
-import userSLice from "./features/user/userSLice";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
+import persistStore from "redux-persist/es/persistStore";
+import storage from "redux-persist/lib/storage";
+import { baseApi } from "./api/baseApi";
+import userReducer from "./features/user/userSLice";
 
+const persistConfig = {
+  key: "user",
+  storage,
+};
+const persistedUserReducer = persistReducer(persistConfig, userReducer);
 export const store = configureStore({
   reducer: {
-    [api.reducerPath]: api.reducer,
-    user: userSLice,
+    [baseApi.reducerPath]: baseApi.reducer,
+    user: persistedUserReducer,
   },
-
-  // TODO : have add middleware for endpoints
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+  middleware: (getDefaultMiddlewares) =>
+    getDefaultMiddlewares({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(baseApi.middleware),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
+
+export const persistor = persistStore(store);
