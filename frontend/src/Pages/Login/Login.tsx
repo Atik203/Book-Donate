@@ -3,10 +3,11 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import axiosPublic from "../../axios/axiosPublic";
-import { login } from "../../redux/features/user/userSLice";
+import { toast } from "sonner";
+import { useLoginMutation } from "../../redux/features/user/userApi";
+import { setUser } from "../../redux/features/user/userSLice";
+import { useAppDispatch } from "../../redux/hooks";
 
 type FormData = {
   userName: string;
@@ -14,26 +15,43 @@ type FormData = {
 };
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const [Login] = useLoginMutation();
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>("");
+  const [password, setPassword] = useState<string>("abcd1234");
 
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit } = useForm<FormData>({
+    defaultValues: { userName: "Atik203" },
+  });
 
   const onSubmit = handleSubmit((data) => {
     const username = data.userName;
     const password = data.password;
 
-    axiosPublic
-      .post("/user/login/", { username: username, password: password })
+    const userInfo = {
+      username: username,
+      password: password,
+    };
+
+    const toastId = toast.loading("Logging in...");
+    Login(userInfo)
+      .unwrap()
       .then((res) => {
-        dispatch(login(res.data));
+        const token = res.token;
+        const user = res.user;
+
+        if (!token || !user) {
+          toast.error("Invalid token or user", { id: toastId });
+          return;
+        }
+        dispatch(setUser({ token, user }));
+        toast.success("Logged in successfully", { id: toastId });
         navigate("/");
       })
       .catch((error) => {
-        console.log(error);
+        const message = error.data.message;
+        toast.error(message, { id: toastId });
       });
   });
 

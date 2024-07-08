@@ -9,7 +9,7 @@ const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (userInfo: TUserInfo) => ({
-        url: "/patient/login/",
+        url: "/user/login/",
         method: "POST",
         body: userInfo,
       }),
@@ -17,7 +17,7 @@ const userApi = baseApi.injectEndpoints({
     }),
     logout: builder.query({
       query: () => ({
-        url: "/patient/logout/",
+        url: "/user/logout/",
         method: "GET",
       }),
     }),

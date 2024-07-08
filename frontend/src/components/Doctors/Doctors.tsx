@@ -3,7 +3,6 @@ import {
   Input,
   Listbox,
   ListboxItem,
-  Pagination,
   PaginationItemRenderProps,
   PaginationItemType,
 } from "@nextui-org/react";
@@ -11,11 +10,7 @@ import { Selection } from "@react-types/shared";
 import { useMemo, useState } from "react";
 import { FaFilter } from "react-icons/fa";
 import { IoSearchCircleOutline } from "react-icons/io5";
-import { useGetDoctorsQuery } from "../../redux/api/baseApi";
-import { doctorData } from "../../types/doctorData";
 import { ChevronIcon } from "../ChevronIcon/ChevronIcon";
-import DoctorCard from "../DoctorCard/DoctorCard";
-import ErrorComponent from "../ErrorComponent/ErrorComonent";
 import { ListboxWrapper } from "../ListBoxWrapper/ListBoxWrapper";
 
 const Doctors = () => {
@@ -36,13 +31,13 @@ const Doctors = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, error, isFetching, isLoading } = useGetDoctorsQuery({
-    page: currentPage,
-    search: searchTerm,
-  });
-  const doctorData: doctorData | undefined = data;
-  if (error instanceof Error) return <ErrorComponent message={error.message} />;
-  const doctors = doctorData?.results ?? [];
+  // const { data, error, isFetching, isLoading } = useGetDoctorsQuery({
+  //   page: currentPage,
+  //   search: searchTerm,
+  // });
+  // const doctorData: doctorData | undefined = data;
+  // if (error instanceof Error) return <ErrorComponent message={error.message} />;
+  // const doctors = doctorData?.results ?? [];
 
   const renderItem = ({
     ref,
@@ -177,7 +172,7 @@ const Doctors = () => {
           type="search"
         />
 
-        <div className="grid grid-cols-1 mt-2 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-4">
+        {/* <div className="grid grid-cols-1 mt-2 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-4">
           {!isFetching &&
             !isLoading &&
             doctors &&
@@ -196,7 +191,7 @@ const Doctors = () => {
             renderItem={renderItem}
             variant="light"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
