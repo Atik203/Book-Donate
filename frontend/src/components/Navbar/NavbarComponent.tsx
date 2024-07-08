@@ -13,16 +13,18 @@ import {
   NavbarMenuToggle,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import axiosPublic from "../../axios/axiosPublic";
+import { toast } from "sonner";
+import { useLogoutMutation } from "../../redux/features/user/userApi";
 import { logout } from "../../redux/features/user/userSLice";
+import { useAppDispatch } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { TUser } from "../../types/userSateData";
 
 export default function NavbarComponent() {
   const userState = useSelector((state: RootState) => state.user);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const user: TUser | null = userState.user;
   let username, first_name, last_name, image, email, reward_point;
@@ -31,11 +33,17 @@ export default function NavbarComponent() {
     ({ username, first_name, last_name, image, email, reward_point } = user);
   }
 
-  const handleLogout = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    axiosPublic.get("/user/logout/").then((res) => {
+  const [Logout] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    const toastId = toast.loading("Logging out...");
+    try {
+      await Logout({});
       dispatch(logout());
-    });
+      toast.success("Logged out successfully", { id: toastId });
+    } catch (error) {
+      toast.error("Logout failed", { id: toastId });
+    }
   };
 
   const location = useLocation();

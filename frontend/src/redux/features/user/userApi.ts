@@ -15,7 +15,7 @@ const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
-    logout: builder.query({
+    logout: builder.mutation({
       query: () => ({
         url: "/user/logout/",
         method: "GET",
@@ -24,4 +24,4 @@ const userApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation } = userApi;
+export const { useLoginMutation, useLogoutMutation } = userApi;
