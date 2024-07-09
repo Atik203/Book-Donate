@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import AboutUs from "../Pages/AboutUs/AboutUs";
+import Books from "../Pages/Books/Books";
 import ContactUs from "../Pages/ContactUs/ContactUs";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
-import Service from "../Pages/Service/Service";
 import SignUp from "../Pages/SignUp/SignUp";
 import Root from "../Root/Root";
 const router = createBrowserRouter([
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/books",
-        element: <Service />,
+        element: <Books />,
       },
       {
         path: "/contact-us",
