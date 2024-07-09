@@ -1,21 +1,23 @@
 import { Helmet } from "react-helmet-async";
+import CardSkeleton from "../../components/CardSkeleton/CardSkeleton";
+import ErrorComponent from "../../components/ErrorComponent/ErrorComonent";
+import PopularBookCard from "../../components/PopularBookCard/PopularBookCard";
 import TitleDescriptionBlock from "../../components/TitleDescriptionBlock/TitleDescriptionBlock";
 import useDeviceDetect from "../../Hooks/useDeviceDetect";
+import { useGetAllBooksQuery } from "../../redux/features/book/bookApi";
+import { TBook } from "../../types/book.types";
 
-const Service = () => {
+const Books = () => {
   const { isDesktop, isTablet } = useDeviceDetect();
   const cardsPerView = isDesktop ? 6 : isTablet ? 4 : 2;
 
-  // const {
-  //   data: services,
-  //   isLoading,
-  //   error,
-  //   isFetching,
-  // } = useGetServicesQuery();
+  const { data, isFetching, isLoading, error } = useGetAllBooksQuery(undefined);
 
-  // if (error instanceof Error) {
-  //   return <ErrorComponent message={error.message} />;
-  // }
+  const books = data?.results;
+
+  if (error instanceof Error) {
+    return <ErrorComponent message={error.message} />;
+  }
 
   return (
     <div className="mx-auto my-10 md:my-16">
@@ -24,9 +26,10 @@ const Service = () => {
       </Helmet>
       <TitleDescriptionBlock
         title="All Books"
-        description="We provide the best services in the industry. Check out our services below."
+        description="Explore our extensive collection of books across various genres. Find your next great read below."
       />
-      {/* {isFetching || isLoading ? (
+
+      {isFetching || isLoading ? (
         <div className="w-10/12 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
           {Array.from({ length: cardsPerView }).map((_, index) => (
             <CardSkeleton key={index}></CardSkeleton>
@@ -34,14 +37,14 @@ const Service = () => {
         </div>
       ) : (
         <div className="w-10/12 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
-          {Array.isArray(services) &&
-            services.map((service: TServiceData) => (
-              <ServiceCard key={service.id} data={service} />
+          {Array.isArray(books) &&
+            books.map((book: TBook) => (
+              <PopularBookCard key={book.id} data={book} />
             ))}
-        </div> */}
-      {/* )} */}
+        </div>
+      )}
     </div>
   );
 };
 
-export default Service;
+export default Books;
