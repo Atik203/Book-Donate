@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import Banner from "../../components/Banner/Banner";
-import Doctors from "../../components/Doctors/Doctors";
+import BookFilter from "../../components/BookFilter/BookFilter";
 import PopularBookProvider from "../../components/PopularBookProvider/PopularBookProvider";
 import TitleDescriptionBlock from "../../components/TitleDescriptionBlock/TitleDescriptionBlock";
 
@@ -13,7 +13,7 @@ const Home = () => {
       </Helmet>
       <Banner></Banner>
       <PopularBookProvider />
-      <Doctors />
+      <BookFilter />
       <TitleDescriptionBlock
         title="Clients Review about us"
         description="We provide the best popular available books. Check out our client review below."
