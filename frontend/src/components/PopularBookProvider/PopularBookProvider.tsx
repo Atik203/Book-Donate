@@ -1,16 +1,14 @@
 import Slider from "react-slick";
-import useDeviceDetect from "../../Hooks/useDeviceDetect";
 import { useGetPopularBooksQuery } from "../../redux/features/book/bookApi";
 import { TBook } from "../../types/book.types";
 import CardSkeleton from "../CardSkeleton/CardSkeleton";
 import ErrorComponent from "../ErrorComponent/ErrorComonent";
+import PopularBookCard from "../PopularBookCard/PopularBookCard";
 import TitleDescriptionBlock from "../TitleDescriptionBlock/TitleDescriptionBlock";
 import LeftArrow from "../ui/LeftArrow";
 import RightArrow from "../ui/RightArrow";
 
 const PopularBookProvider = () => {
-  const { isDesktop, isTablet } = useDeviceDetect();
-
   const { data, isFetching, isLoading, error } =
     useGetPopularBooksQuery(undefined);
 
@@ -20,11 +18,11 @@ const PopularBookProvider = () => {
 
   const settings = {
     dots: true,
-    infinite: false,
     speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    initialSlide: 0,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    initialSlide: 3,
+    infinite: true,
     responsive: [
       {
         breakpoint: 1024,
@@ -56,7 +54,7 @@ const PopularBookProvider = () => {
   };
 
   return (
-    <div className="mx-auto relative my-20">
+    <div className="mx-auto my-20">
       <TitleDescriptionBlock
         title="Our Popular Books"
         description="At Smart Care, we are committed to providing a wide range of services designed to ensure your well-being and comfort."
@@ -66,18 +64,10 @@ const PopularBookProvider = () => {
           <CardSkeleton />
         </div>
       ) : (
-        <div className="slider-container">
+        <div className="slider-container px-5">
           <Slider {...settings}>
             {slides?.map((book: TBook) => (
-              <div className="mx-auto">
-                <h3>{book.title}</h3>
-
-                <img
-                  src={book.image}
-                  className="h-72 mx-auto"
-                  alt={book.title}
-                />
-              </div>
+              <PopularBookCard key={book.id} data={book} />
             ))}
           </Slider>
         </div>
