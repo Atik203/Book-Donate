@@ -8,7 +8,7 @@ const LeftArrow = (props) => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="size-10"
+      className="left-arrow size-8 text-black font-bold cursor-pointer"
     >
       <path
         strokeLinecap="round"

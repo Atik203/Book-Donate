@@ -27,3 +27,29 @@
   background-image: linear-gradient(138.68deg, #f4ffe9 5.06%, #81b616 275.42%);
   box-sizing: border-box;
 }
+
+.left-arrow {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  margin-left: -25px;
+}
+
+.right-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  margin-right: -25px;
+}
+
+.slick-track {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
