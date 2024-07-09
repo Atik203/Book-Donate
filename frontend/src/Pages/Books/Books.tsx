@@ -11,7 +11,7 @@ const Books = () => {
   const { isDesktop, isTablet } = useDeviceDetect();
   const cardsPerView = isDesktop ? 6 : isTablet ? 4 : 2;
 
-  const { data, isFetching, isLoading, error } = useGetAllBooksQuery(undefined);
+  const { data, isFetching, isLoading, error } = useGetAllBooksQuery({});
 
   const books = data?.results;
 

@@ -2,11 +2,11 @@ import TitleDescriptionBlock from "./../../components/TitleDescriptionBlock/Titl
 
 const AboutUs = () => {
   return (
-    <div>
+    <div className="">
       <TitleDescriptionBlock
         title="About Us"
-        description="We are a team of professionals who are dedicated to providing the best services to our clients. We have been in the industry for over 10 years and have served thousands of clients."
-      ></TitleDescriptionBlock>
+        description="At BookDonate, your generosity is rewarded. Donate books to earn points and redeem them for exciting gifts. Join us in spreading knowledge and enjoy exclusive rewards."
+      />
     </div>
   );
 };
