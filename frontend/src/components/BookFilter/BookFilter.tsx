@@ -3,6 +3,7 @@ import {
   Input,
   Listbox,
   ListboxItem,
+  Pagination,
   PaginationItemRenderProps,
   PaginationItemType,
 } from "@nextui-org/react";
@@ -10,10 +11,14 @@ import { Selection } from "@react-types/shared";
 import { useMemo, useState } from "react";
 import { FaFilter } from "react-icons/fa";
 import { IoSearchCircleOutline } from "react-icons/io5";
+import { useGetAllBooksQuery } from "../../redux/features/book/bookApi";
+import { TBook } from "../../types/book.types";
 import { ChevronIcon } from "../ChevronIcon/ChevronIcon";
+import ErrorComponent from "../ErrorComponent/ErrorComonent";
 import { ListboxWrapper } from "../ListBoxWrapper/ListBoxWrapper";
+import PopularBookCard from "../PopularBookCard/PopularBookCard";
 
-const Doctors = () => {
+const BookFilter = () => {
   const filters: string[] = ["Genre", "Condition", "Status"];
   const [selectedKeys, setSelectedKeys] = useState(new Set(["Filter Books"]));
   const selectedValue = useMemo(
@@ -31,13 +36,13 @@ const Doctors = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  // const { data, error, isFetching, isLoading } = useGetDoctorsQuery({
-  //   page: currentPage,
-  //   search: searchTerm,
-  // });
-  // const doctorData: doctorData | undefined = data;
-  // if (error instanceof Error) return <ErrorComponent message={error.message} />;
-  // const doctors = doctorData?.results ?? [];
+  const { data, error, isFetching, isLoading } = useGetAllBooksQuery({
+    page: currentPage,
+    search: searchTerm,
+  });
+
+  if (error instanceof Error) return <ErrorComponent message={error.message} />;
+  const books: TBook[] = data?.results ?? [];
 
   const renderItem = ({
     ref,
@@ -55,7 +60,7 @@ const Doctors = () => {
             className,
             "bg-[#D9D9D9] text-[#5D94A6] min-w-12 w-12 h-12"
           )}
-          onClick={() => setCurrentPage(currentPage + 1)}
+          onClick={() => setCurrentPage(currentPage)}
         >
           <ChevronIcon className="rotate-180" />
         </button>
@@ -70,7 +75,7 @@ const Doctors = () => {
             className,
             "bg-[#D9D9D9] text-[#5D94A6] min-w-12  w-12 h-12"
           )}
-          onClick={() => setCurrentPage(currentPage - 1)}
+          onClick={() => setCurrentPage(currentPage)}
         >
           <ChevronIcon />
         </button>
@@ -116,7 +121,7 @@ const Doctors = () => {
             input: "bg-white my-input text-[#E3C3C3]",
             inputWrapper: "bg-white",
           }}
-          placeholder={`${selectedValue ? selectedValue : "Filter Doctors"}`}
+          placeholder={`${selectedValue ? selectedValue : "Filter books"}`}
           startContent={<FaFilter size={18} className="text-[#E3C3C3]" />}
           type="search"
         />
@@ -172,12 +177,12 @@ const Doctors = () => {
           type="search"
         />
 
-        {/* <div className="grid grid-cols-1 mt-2 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-4">
+        <div className="grid grid-cols-1 mt-2 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-4">
           {!isFetching &&
             !isLoading &&
-            doctors &&
-            doctors.map((doctor) => (
-              <DoctorCard key={doctor.id} data={doctor} />
+            books &&
+            books.map((book: TBook) => (
+              <PopularBookCard key={book.id} data={book} />
             ))}
         </div>
         <div className="mx-auto mt-4 w-full">
@@ -191,10 +196,10 @@ const Doctors = () => {
             renderItem={renderItem}
             variant="light"
           />
-        </div> */}
+        </div>
       </div>
     </div>
   );
 };
 
-export default Doctors;
+export default BookFilter;

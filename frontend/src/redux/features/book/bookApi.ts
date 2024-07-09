@@ -9,9 +9,10 @@ const bookApi = baseApi.injectEndpoints({
       }),
     }),
     getAllBooks: builder.query({
-      query: () => ({
+      query: ({ page, search }) => ({
         url: `/book/list/`,
         method: "GET",
+        params: { page, search },
       }),
     }),
   }),
