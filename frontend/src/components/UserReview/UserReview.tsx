@@ -6,10 +6,13 @@ export interface UserReviewProps {
     first_name: string;
     last_name: string;
     image: string;
+    id: number;
   };
   book: {
     title: string;
     author: string;
+    id: number;
+    image: string;
   };
   rating: string;
   comment: string;

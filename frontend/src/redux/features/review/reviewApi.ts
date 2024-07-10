@@ -5,7 +5,11 @@ const reviewApi = baseApi.injectEndpoints({
     getAllReviews: builder.query({
       query: () => "/review/list/",
     }),
+
+    getSingleBookReview: builder.query({
+      query: (bookId) => `/review/list/?bookId=${bookId}`,
+    }),
   }),
 });
 
-export const { useGetAllReviewsQuery } = reviewApi;
+export const { useGetAllReviewsQuery, useGetSingleBookReviewQuery } = reviewApi;
