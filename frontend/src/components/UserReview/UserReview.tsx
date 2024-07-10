@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface UserReviewProps {
   id: number;
   user: {
@@ -17,15 +15,11 @@ export interface UserReviewProps {
   date_added: string;
 }
 
-const UserReview: React.FC<UserReviewProps> = ({
-  user,
-  book,
-  rating,
-  comment,
-  date_added,
-}) => {
+const UserReview = ({ review }: { review: UserReviewProps }) => {
+  const { user, book, rating, comment, date_added } = review;
+
   return (
-    <div className="bg-white p-4 text-center rounded-lg shadow-md mx-2 w-64 h-52">
+    <div className="bg-white p-4 text-center rounded-md shadow-xl mx-2 w-64 h-52">
       <h3 className="text-xl font-bold text-gray-800">
         {user.first_name} {user.last_name}
       </h3>
