@@ -21,7 +21,14 @@ const userApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getSingleUser: builder.query({
+      query: (id: number) => ({
+        url: `/user/list/?id=${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation } = userApi;
+export const { useLoginMutation, useLogoutMutation, useGetSingleUserQuery } =
+  userApi;
