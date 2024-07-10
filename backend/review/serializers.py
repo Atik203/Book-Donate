@@ -9,6 +9,7 @@ from .models import Review
 
 
 class UserSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     first_name = serializers.SerializerMethodField()
@@ -16,8 +17,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BookUser
-        fields = ['username', 'email', 'first_name', 'last_name','image']
+        fields = ['username', 'email', 'first_name', 'last_name','image','id']
 
+
+    def get_id(self, obj):
+        return obj.user.id
+      
     def get_username(self, obj):
         return obj.user.username
 
@@ -32,11 +37,20 @@ class UserSerializer(serializers.ModelSerializer):
     
     def get_image(self, obj):
         return obj.image.url
+    
+    
         
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['title', 'author']        
+        fields = ['title', 'author','id','image']
+    
+    def get_image(self, obj):
+        return obj.image.url
+    
+    def get_id(self, obj):
+        return obj.id    
+                
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = UserSerializer()
