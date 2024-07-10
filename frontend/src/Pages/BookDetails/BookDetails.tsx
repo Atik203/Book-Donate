@@ -1,10 +1,23 @@
+import { Select, SelectItem } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
+import { toast } from "sonner";
 import { UserReviewProps } from "../../components/UserReview/UserReview";
 import { useGetSingleBookQuery } from "../../redux/features/book/bookApi";
-import { useGetSingleBookReviewQuery } from "../../redux/features/review/reviewApi";
+import {
+  useGetSingleBookReviewQuery,
+  usePostReviewMutation,
+} from "../../redux/features/review/reviewApi";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { TBook } from "../../types/book.types";
+
+const RATING_OPTIONS = [
+  { key: "⭐", label: "⭐" },
+  { key: "⭐⭐", label: "⭐⭐" },
+  { key: "⭐⭐⭐", label: "⭐⭐⭐" },
+  { key: "⭐⭐⭐⭐", label: "⭐⭐⭐⭐" },
+  { key: "⭐⭐⭐⭐⭐", label: "⭐⭐⭐⭐⭐" },
+];
 
 const BookDetails = () => {
   const location = useLocation();
@@ -14,17 +27,23 @@ const BookDetails = () => {
   const isAuthenticated = useAppSelector(
     (state: RootState) => state.user.isAuthenticated
   );
+  const currentUser = useAppSelector((state: RootState) => state.user.user);
 
   // Ensure bookId is valid before making the query
   const { data, isFetching, isError, isLoading } = useGetSingleBookQuery(
     bookId,
     {
       skip: !bookId,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
     }
   );
   const { data: reviewsData } = useGetSingleBookReviewQuery(bookId, {
     skip: !bookId,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
   });
+  const [PostReview] = usePostReviewMutation();
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
@@ -52,6 +71,38 @@ const BookDetails = () => {
 
   const isButtonDisabled = status !== "Available" || stock <= 0;
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const comment = e.currentTarget.querySelector("textarea")?.value;
+    const rating = e.currentTarget.querySelector("select")?.value;
+    const user = currentUser?.id as number;
+    const book = Number(bookId);
+
+    const data = {
+      comment,
+      rating,
+      user,
+      book,
+    };
+
+    console.log("Submitting review with data:", data); // Log the data object for debugging
+
+    const toastId = toast.loading("Submitting review...");
+    try {
+      const result = await PostReview(data).unwrap(); // Await the promise
+      console.log("Review submission result:", result); // Log the result for debugging
+      if (!result) {
+        toast.error("Failed to submit review", { id: toastId });
+      } else {
+        e.currentTarget.reset();
+        toast.success("Review submitted successfully", { id: toastId });
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error); // Log the error for debugging
+      toast.error("Failed to submit review", { id: toastId });
+    }
+  };
   return (
     <div className="my-20">
       <div className="flex gap-8 justify-center mx-auto">
@@ -144,12 +195,22 @@ const BookDetails = () => {
         {isAuthenticated && (
           <div className="mt-6">
             <h3 className="text-lg font-semibold">Leave a Comment</h3>
-            <form>
+            <form onSubmit={handleSubmit}>
               <textarea
                 className="w-full p-2 border rounded mt-2"
                 rows={4}
                 placeholder="Write your comment here..."
               ></textarea>
+              <div className="bg-white max-w-md">
+                <Select
+                  label="Select Rating"
+                  className="text-xl font-bold text-black bg-base-50"
+                >
+                  {RATING_OPTIONS.map((rating) => (
+                    <SelectItem key={rating.key}>{rating.label}</SelectItem>
+                  ))}
+                </Select>
+              </div>
               <button
                 type="submit"
                 className="bg-navPrimary mt-2 px-4 py-2 text-white rounded"

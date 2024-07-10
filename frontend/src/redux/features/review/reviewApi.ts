@@ -9,7 +9,18 @@ const reviewApi = baseApi.injectEndpoints({
     getSingleBookReview: builder.query({
       query: (bookId) => `/review/list/?bookId=${bookId}`,
     }),
+    postReview: builder.mutation({
+      query: (data) => ({
+        url: "/review/review-post/",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllReviewsQuery, useGetSingleBookReviewQuery } = reviewApi;
+export const {
+  useGetAllReviewsQuery,
+  useGetSingleBookReviewQuery,
+  usePostReviewMutation,
+} = reviewApi;
