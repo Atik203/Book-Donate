@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BookUser
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['username', 'email', 'first_name', 'last_name','image']
 
     def get_username(self, obj):
         return obj.user.username
@@ -29,6 +29,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_last_name(self, obj):
         return obj.user.last_name
+    
+    def get_image(self, obj):
+        return obj.image.url
         
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
