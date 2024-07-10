@@ -36,10 +36,16 @@ const BookFilter = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, error, isFetching, isLoading } = useGetAllBooksQuery({
+  const [id, setId] = useState(null);
+
+  const query = {
     page: currentPage,
     search: searchTerm,
-  });
+    page_size: 3,
+    id: null,
+  };
+
+  const { data, error, isFetching, isLoading } = useGetAllBooksQuery(query);
 
   if (error instanceof Error) return <ErrorComponent message={error.message} />;
   const books: TBook[] = data?.results ?? [];
@@ -60,7 +66,7 @@ const BookFilter = () => {
             className,
             "bg-[#D9D9D9] text-[#5D94A6] min-w-12 w-12 h-12"
           )}
-          onClick={() => setCurrentPage(currentPage)}
+          onClick={() => setCurrentPage(currentPage + 1)}
         >
           <ChevronIcon className="rotate-180" />
         </button>
@@ -75,7 +81,7 @@ const BookFilter = () => {
             className,
             "bg-[#D9D9D9] text-[#5D94A6] min-w-12  w-12 h-12"
           )}
-          onClick={() => setCurrentPage(currentPage)}
+          onClick={() => setCurrentPage(currentPage - 1)}
         >
           <ChevronIcon />
         </button>

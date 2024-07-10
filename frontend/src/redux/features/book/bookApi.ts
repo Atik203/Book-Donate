@@ -9,13 +9,39 @@ const bookApi = baseApi.injectEndpoints({
       }),
     }),
     getAllBooks: builder.query({
-      query: ({ page, search }) => ({
-        url: `/book/list/`,
+      query: ({ page, search, id, page_size }) => {
+        const params = new URLSearchParams();
+
+        if (id) {
+          params.append("id", id);
+        }
+        if (page) {
+          params.append("page", page.toString());
+        }
+        if (search) {
+          params.append("search", search);
+        }
+        if (page_size) {
+          params.append("page_size", page_size.toString());
+        }
+        return {
+          url: `/book/list/`,
+          method: "GET",
+          params,
+        };
+      },
+    }),
+    getSingleBook: builder.query({
+      query: (id) => ({
+        url: `/book/list/?id=${id}`,
         method: "GET",
-        params: { page, search },
       }),
     }),
   }),
 });
 
-export const { useGetPopularBooksQuery, useGetAllBooksQuery } = bookApi;
+export const {
+  useGetPopularBooksQuery,
+  useGetAllBooksQuery,
+  useGetSingleBookQuery,
+} = bookApi;

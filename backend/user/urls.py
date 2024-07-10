@@ -8,6 +8,7 @@ router = DefaultRouter()
 router.register('list', BookUserViewSet) 
 
 
+
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', RegistrationViewSet.as_view(), name = 'register'),
