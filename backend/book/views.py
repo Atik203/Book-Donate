@@ -29,10 +29,12 @@ class BookViewSet(viewsets.ModelViewSet):
     
     # query with id
     def get_queryset(self):
-        queryset = Book.objects.all()
+        queryset = super().get_queryset()
         id = self.request.query_params.get('id', None)
         if id is not None:
             queryset = queryset.filter(id=id)
+            if not queryset.exists():
+                return queryset
         return queryset
     
      

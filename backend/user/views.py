@@ -36,10 +36,12 @@ class BookUserViewSet(viewsets.ModelViewSet):
     serializer_class = BookUserSerializers
     
     def get_queryset(self):
-        queryset = BookUser.objects.all()
+        queryset = super().get_queryset()
         id = self.request.query_params.get('id', None)
         if id is not None:
             queryset = queryset.filter(id=id)
+            if not queryset.exists():
+                return queryset
         return queryset
     
 
