@@ -2,6 +2,8 @@ from django.db.models import Avg, Case, FloatField, IntegerField, Value, When
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.filters import BaseFilterBackend, SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from review.models import Review
@@ -10,9 +12,33 @@ from .models import Book, Genre
 from .serializers import BookSerializers, GenreSerializers
 
 
+class BookPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+    
+     
+
+
 class BookViewSet(viewsets.ModelViewSet):
-    serializer_class = BookSerializers
     queryset = Book.objects.all()
+    pagination_class = BookPagination
+    serializer_class = BookSerializers
+    filter_backends = [SearchFilter]
+    search_fields = ['title', 'author', 'genre__name', 'publisher']
+    
+    # query with id
+    def get_queryset(self):
+        queryset = Book.objects.all()
+        id = self.request.query_params.get('id', None)
+        if id is not None:
+            queryset = queryset.filter(id=id)
+        return queryset
+    
+     
+        
+    
+   
     
     
 class GenreViewSet(viewsets.ModelViewSet):
