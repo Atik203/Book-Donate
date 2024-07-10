@@ -35,6 +35,13 @@ class BookUserViewSet(viewsets.ModelViewSet):
     queryset =  BookUser.objects.all()
     serializer_class = BookUserSerializers
     
+    def get_queryset(self):
+        queryset = BookUser.objects.all()
+        id = self.request.query_params.get('id', None)
+        if id is not None:
+            queryset = queryset.filter(id=id)
+        return queryset
+    
 
 class RegistrationViewSet(APIView):
     serializer_class = RegistrationSerializer
@@ -105,4 +112,6 @@ class LogOutViewSet(APIView):
                 logout(request)
         except:
             return Response("Error Something")        
-        return Response("Logged out successfully")       
+        return Response("Logged out successfully")
+
+               

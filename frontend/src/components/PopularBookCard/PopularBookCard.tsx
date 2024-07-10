@@ -1,10 +1,12 @@
 import { Image } from "@nextui-org/react";
 import { truncate } from "lodash";
 import { FaArrowRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { TBook } from "../../types/book.types";
 
 type TBookCardProps = {
   data: TBook;
+  // setId: (id: number) => void;
 };
 
 const PopularBookCard: React.FC<TBookCardProps> = ({ data }) => {
@@ -39,9 +41,11 @@ const PopularBookCard: React.FC<TBookCardProps> = ({ data }) => {
         <p className="text-black text-justify">
           {truncate(data.description, { length: 100 })}
         </p>
-        <p className="hover:text-navPrimary font-bold text-lg cursor-pointer">
-          Learn More <FaArrowRight className="inline" />
-        </p>
+        <Link to={`/book-details/?id=${data.id}`}>
+          <p className="hover:text-navPrimary font-bold text-lg cursor-pointer">
+            Learn More <FaArrowRight className="inline" />
+          </p>
+        </Link>
       </div>
     </div>
   );
