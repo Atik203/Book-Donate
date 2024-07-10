@@ -1,6 +1,7 @@
 
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from book.models import Book
 from user.models import BookUser
@@ -58,3 +59,26 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
+
+class PostReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['user', 'book', 'rating', 'comment']
+
+    def create(self, validated_data):
+        user_id = validated_data['user']
+        book_id = validated_data['book']
+
+        try:
+            user = BookUser.objects.get(user__id=user_id)
+        except BookUser.DoesNotExist:
+            raise ValidationError({'user': 'User does not exist'})
+
+        try:
+            book = Book.objects.get(id=book_id)
+        except Book.DoesNotExist:
+            raise ValidationError({'book': 'Book does not exist'})
+
+        review = Review(user=user, book=book, rating=validated_data['rating'], comment=validated_data['comment'])
+        review.save()
+        return review 
