@@ -8,6 +8,7 @@ import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/SignUp/SignUp";
 import Root from "../Root/Root";
+import PrivateRouteProvider from "./PrivateRouteProvider";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,7 +41,12 @@ const router = createBrowserRouter([
       },
       {
         path: `/book-details`,
-        element: <BookDetails />,
+        element: (
+          <PrivateRouteProvider>
+            {" "}
+            <BookDetails />{" "}
+          </PrivateRouteProvider>
+        ),
       },
     ],
   },
