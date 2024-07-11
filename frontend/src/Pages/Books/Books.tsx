@@ -58,18 +58,19 @@ const Books = () => {
             {Array.from({ length: totalPages }, (_, index) => {
               const isActive = currentPage === index + 1;
               return (
-                <input
+                <button
                   key={index + 1}
-                  className={`rounded-full text-white btn btn-circle`}
-                  type="radio"
+                  className="btn btn-circle"
                   aria-label={`${index + 1}`}
-                  checked={isActive}
-                  onChange={() => handlePageChange(index + 1)}
+                  onClick={() => handlePageChange(index + 1)}
                   style={{
-                    backgroundColor: isActive ? "darkorange" : "gray",
                     cursor: "pointer",
+                    backgroundColor: isActive ? "#FF8C00" : "#4B5563",
+                    color: "white",
                   }}
-                />
+                >
+                  {index + 1}
+                </button>
               );
             })}
           </div>
