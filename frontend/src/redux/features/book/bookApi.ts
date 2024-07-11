@@ -80,6 +80,19 @@ const bookApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    claimedBook: builder.mutation({
+      query: (submitData) => {
+        console.log(submitData);
+        return {
+          url: `/book/claimed-book/`,
+          method: "POST",
+          body: {
+            claimed_by: submitData.claimed_by,
+            id: submitData.id,
+          },
+        };
+      },
+    }),
   }),
 });
 
@@ -89,4 +102,5 @@ export const {
   useGetSingleBookQuery,
   useGetAllGenresQuery,
   useGetAllAuthorsQuery,
+  useClaimedBookMutation,
 } = bookApi;
