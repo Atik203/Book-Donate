@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import CardSkeleton from "../../components/CardSkeleton/CardSkeleton";
 import ErrorComponent from "../../components/ErrorComponent/ErrorComonent";
@@ -6,18 +7,28 @@ import TitleDescriptionBlock from "../../components/TitleDescriptionBlock/TitleD
 import useDeviceDetect from "../../Hooks/useDeviceDetect";
 import { useGetAllBooksQuery } from "../../redux/features/book/bookApi";
 import { TBook } from "../../types/book.types";
-
 const Books = () => {
   const { isDesktop, isTablet } = useDeviceDetect();
   const cardsPerView = isDesktop ? 6 : isTablet ? 4 : 2;
 
-  const { data, isFetching, isLoading, error } = useGetAllBooksQuery({});
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { data, isFetching, isLoading, error } = useGetAllBooksQuery({
+    page: currentPage,
+    page_size: 3,
+  });
 
   const books = data?.results;
+  const totalCount = data?.count ?? 0;
+  const totalPages = Math.ceil(totalCount / 3);
 
   if (error instanceof Error) {
     return <ErrorComponent message={error.message} />;
   }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="mx-auto my-10 md:my-16">
@@ -36,11 +47,32 @@ const Books = () => {
           ))}
         </div>
       ) : (
-        <div className="w-10/12 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
-          {Array.isArray(books) &&
-            books.map((book: TBook) => (
-              <PopularBookCard key={book.id} data={book} />
-            ))}
+        <div>
+          <div className="w-10/12 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
+            {Array.isArray(books) &&
+              books.map((book: TBook) => (
+                <PopularBookCard key={book.id} data={book} />
+              ))}
+          </div>
+          <div className="join space-x-2 font-bold mx-auto my-8 flex justify-center">
+            {Array.from({ length: totalPages }, (_, index) => {
+              const isActive = currentPage === index + 1;
+              return (
+                <input
+                  key={index + 1}
+                  className={`rounded-full text-white btn btn-circle`}
+                  type="radio"
+                  aria-label={`${index + 1}`}
+                  checked={isActive}
+                  onChange={() => handlePageChange(index + 1)}
+                  style={{
+                    backgroundColor: isActive ? "darkorange" : "gray",
+                    cursor: "pointer",
+                  }}
+                />
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
