@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Navbar,
-  NavbarBrand,
   NavbarContent,
   NavbarItem,
   NavbarMenu,
@@ -22,7 +21,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { TUser } from "../../types/userSateData";
 
-export default function NavbarComponent() {
+export default function DashboardNavbar() {
   const userState = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
 
@@ -76,14 +75,6 @@ export default function NavbarComponent() {
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
-        <NavbarBrand>
-          <RouterLink to="/" className="flex items-center">
-            <img src="../../../public/logo.png" alt="" className="h-12 w-12" />
-            <p className="font-bold md:text-3xl text-2xl lg:text-4xl">
-              Book<span className="text-navPrimary">Donate</span>
-            </p>
-          </RouterLink>
-        </NavbarBrand>
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
@@ -165,14 +156,6 @@ export default function NavbarComponent() {
         ],
       }}
     >
-      <NavbarBrand>
-        <RouterLink to="/" className="flex items-center gap-1">
-          <img src="../../../public/logo.png" alt="" className="h-16 w-16" />
-          <p className="font-bold tracking-wider md:text-3xl text-2xl lg:text-4xl">
-            Book<span className="text-navPrimary">Donate</span>
-          </p>
-        </RouterLink>
-      </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-6 text-xl" justify="end">
         <NavbarItem isActive={location.pathname === "/"}>
           <RouterLink

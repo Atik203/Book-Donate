@@ -7,6 +7,7 @@ export interface TUser {
   phone: string | null;
   username: string | null;
   reward_point: number;
+  role: "Admin" | "User";
 }
 
 export interface UserState {

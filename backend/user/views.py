@@ -96,6 +96,7 @@ class LoginViewSet(APIView):
                         'first_name': user.first_name, 
                         'last_name': user.last_name,
                         'reward_point': user.bookuser.reward_point,
+                        'role' : user.bookuser.role
                     }
                     if hasattr(user, 'bookuser') and user.bookuser is not None:
                         user_data['phone'] = user.bookuser.phone
