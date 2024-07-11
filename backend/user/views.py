@@ -89,7 +89,8 @@ class LoginViewSet(APIView):
                     token,_ = Token.objects.get_or_create(user = user)
                     login(request, user)
                     user_data = {
-                        'id': user.id,
+                        # BokkUser model id not user model id
+                        'id': user.bookuser.id,
                         'username': user.username, 
                         'email': user.email, 
                         'first_name': user.first_name, 

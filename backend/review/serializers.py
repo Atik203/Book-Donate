@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
     def get_id(self, obj):
-        return obj.user.id
+        return obj.id
       
     def get_username(self, obj):
         return obj.user.username
@@ -60,25 +60,17 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = '__all__'
 
+
 class PostReviewSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=BookUser.objects.all())
+    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
+
     class Meta:
         model = Review
         fields = ['user', 'book', 'rating', 'comment']
 
-    def create(self, validated_data):
-        user_id = validated_data['user']
-        book_id = validated_data['book']
-
+    def save(self, **kwargs):
         try:
-            user = BookUser.objects.get(user__id=user_id)
-        except BookUser.DoesNotExist:
-            raise ValidationError({'user': 'User does not exist'})
-
-        try:
-            book = Book.objects.get(id=book_id)
-        except Book.DoesNotExist:
-            raise ValidationError({'book': 'Book does not exist'})
-
-        review = Review(user=user, book=book, rating=validated_data['rating'], comment=validated_data['comment'])
-        review.save()
-        return review 
+            return super().save(**kwargs)
+        except Exception as e:
+            raise serializers.ValidationError({'error': str(e)})
