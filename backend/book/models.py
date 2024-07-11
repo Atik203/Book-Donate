@@ -37,5 +37,6 @@ class Book(models.Model):
     pages = models.IntegerField(blank=True, null=True)
     reward_point = models.IntegerField(default=0)
     
+    
     def __str__(self):
         return self.title    

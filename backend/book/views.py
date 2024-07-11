@@ -1,15 +1,16 @@
 from django.db.models import Avg, Case, FloatField, IntegerField, Value, When
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.filters import BaseFilterBackend, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from review.models import Review
 
 from .models import Book, Genre
-from .serializers import BookSerializers, GenreSerializers
+from .serializers import AuthorSerializers, BookSerializers, GenreSerializers
 
 
 class BookPagination(PageNumberPagination):
@@ -25,22 +26,37 @@ class BookViewSet(viewsets.ModelViewSet):
     pagination_class = BookPagination
     serializer_class = BookSerializers
     filter_backends = [SearchFilter]
-    search_fields = ['title', 'author', 'genre__name', 'publisher']
+    search_fields = ['title', 'author', 'genre__slug', 'publisher','condition','status']
     
     # query with id
     def get_queryset(self):
         queryset = super().get_queryset()
         id = self.request.query_params.get('id', None)
+        genre_slug = self.request.query_params.get('genre', None)
+        condition = self.request.query_params.get('condition', None)
+        status = self.request.query_params.get('status', None)
+        rating = self.request.query_params.get('rating', None)
+        author = self.request.query_params.get('author', None)
         if id is not None:
             queryset = queryset.filter(id=id)
             if not queryset.exists():
                 return queryset
-        return queryset
-    
-     
         
-    
-   
+        if genre_slug is not None:
+            queryset = queryset.filter(genre__slug=genre_slug)
+        if condition is not None:
+            queryset = queryset.filter(condition=condition)
+        if status is not None:
+            queryset = queryset.filter(status=status)
+        if rating is not None:
+            star_rating = f'⭐' * int(rating)
+            queryset = queryset.filter(reviews__rating=star_rating)
+        if author is not None:
+            author_name = author.replace('+', ' ')
+            queryset = queryset.filter(author=author_name)
+        
+            
+        return queryset
     
     
 class GenreViewSet(viewsets.ModelViewSet):
@@ -67,4 +83,9 @@ class PopularBooksView(viewsets.ModelViewSet):
             avg_rating=Coalesce(Avg(ratings_case, output_field=FloatField()), Value(0.0))
         ).order_by('-avg_rating')[:6]  
         return books_with_avg_rating
-       
+
+class AuthorListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        authors = Book.objects.values_list('author', flat=True).distinct()
+        serializer = AuthorSerializers(authors, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
