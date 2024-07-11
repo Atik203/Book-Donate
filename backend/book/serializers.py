@@ -12,4 +12,10 @@ class BookSerializers(serializers.ModelSerializer):
     genre = GenreSerializers(many=True)
     class Meta:
         model = Book
-        fields = '__all__'        
+        fields = '__all__'
+
+class AuthorSerializers(serializers.Serializer):
+    author = serializers.CharField(max_length=100)
+    
+    def to_representation(self, instance):
+        return {'author': instance}
