@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Select, SelectItem } from "@nextui-org/react";
 import {
   Controller,
@@ -9,7 +10,10 @@ import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { UserReviewProps } from "../../components/UserReview/UserReview";
 import { RATING_OPTIONS } from "../../constants/book.contants";
-import { useGetSingleBookQuery } from "../../redux/features/book/bookApi";
+import {
+  useClaimedBookMutation,
+  useGetSingleBookQuery,
+} from "../../redux/features/book/bookApi";
 import {
   useGetSingleBookReviewQuery,
   usePostReviewMutation,
@@ -30,14 +34,17 @@ const BookDetails = () => {
   const currentUser = useAppSelector((state: RootState) => state.user.user);
 
   // Ensure bookId is valid before making the query
-  const { data, isFetching, isError, isLoading } = useGetSingleBookQuery(
-    bookId,
-    {
-      skip: !bookId,
-      refetchOnMountOrArgChange: true,
-      refetchOnReconnect: true,
-    }
-  );
+  const {
+    data,
+    isFetching,
+    isError,
+    isLoading,
+    refetch: refetchBook,
+  } = useGetSingleBookQuery(bookId, {
+    skip: !bookId,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
   const { data: reviewsData, refetch: refetchReview } =
     useGetSingleBookReviewQuery(bookId, {
       skip: !bookId,
@@ -45,6 +52,7 @@ const BookDetails = () => {
       refetchOnReconnect: true,
     });
   const [PostReview] = usePostReviewMutation();
+  const [claimedBook] = useClaimedBookMutation();
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
@@ -99,6 +107,30 @@ const BookDetails = () => {
     }
   };
 
+  const handleBookClaim = async () => {
+    const claimed_by = currentUser?.id as number;
+    const id = Number(bookId);
+    const submitData = {
+      claimed_by,
+      id,
+    };
+    const toastId = toast.loading("Claiming book...");
+    await claimedBook(submitData)
+      .unwrap()
+      .then((result) => {
+        if (!result) {
+          toast.error("Failed to claim book", { id: toastId });
+        } else {
+          refetchBook();
+          toast.success("Book claimed successfully", { id: toastId });
+        }
+      })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .catch((error: any) => {
+        toast.error("Failed to claim book", { id: toastId });
+      });
+  };
+
   return (
     <div className="my-20">
       <div className="flex gap-8 justify-center mx-auto">
@@ -149,6 +181,7 @@ const BookDetails = () => {
             ))}
           </p>
           <button
+            onClick={handleBookClaim}
             className="btn mt-2 bg-navPrimary text-white rounded-md text-lg px-5 hover:bg-gray-400
                 hover:text-black"
             disabled={isButtonDisabled}

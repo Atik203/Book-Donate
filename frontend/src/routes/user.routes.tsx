@@ -9,8 +9,6 @@ export const userPaths = [
   },
   {
     name: "Profile",
-    path: "profile",
-    element: <div>Profile</div>,
     children: [
       {
         name: "My Donated Books",

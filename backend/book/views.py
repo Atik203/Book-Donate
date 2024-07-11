@@ -1,7 +1,7 @@
 from django.db.models import Avg, Case, FloatField, IntegerField, Value, When
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
-from rest_framework import status, viewsets
+from rest_framework import serializers, status, viewsets
 from rest_framework.filters import BaseFilterBackend, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -10,7 +10,8 @@ from rest_framework.views import APIView
 from review.models import Review
 
 from .models import Book, Genre
-from .serializers import AuthorSerializers, BookSerializers, GenreSerializers
+from .serializers import (AuthorSerializers, BookSerializers,
+                          ClaimedBookSerializers, GenreSerializers)
 
 
 class BookPagination(PageNumberPagination):
@@ -89,3 +90,15 @@ class AuthorListAPIView(APIView):
         authors = Book.objects.values_list('author', flat=True).distinct()
         serializer = AuthorSerializers(authors, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class ClaimBookAPIView(APIView):
+    def post(self, request, *args, **kwargs): # Debugging line to print incoming request data
+        serializer = ClaimedBookSerializers(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                return Response({'success': True, 'message': 'Book claimed successfully'}, status=status.HTTP_201_CREATED)
+            except serializers.ValidationError as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
