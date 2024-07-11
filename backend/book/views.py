@@ -98,7 +98,7 @@ class ClaimBookAPIView(APIView):
         if serializer.is_valid():
             try:
                 serializer.save()
-                return Response({'success': True, 'message': 'Book claimed successfully'}, status=status.HTTP_201_CREATED)
+                return Response({'Claimed Book Successfully'}, status=status.HTTP_201_CREATED)
             except serializers.ValidationError as e:
                 return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

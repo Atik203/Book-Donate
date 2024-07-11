@@ -13,6 +13,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from book.models import Book
+from book.serializers import BookSerializers
+
 from .models import BookUser
 from .serializers import (BookUserSerializers, LoginSerializer,
                           RegistrationSerializer)
@@ -88,6 +91,8 @@ class LoginViewSet(APIView):
                 if user:
                     token,_ = Token.objects.get_or_create(user = user)
                     login(request, user)
+                    claimed_books = Book.objects.filter(claimed_by=user.bookuser.id)
+                    claimed_books_serializer = BookSerializers(claimed_books, many=True).data
                     user_data = {
                         # BokkUser model id not user model id
                         'id': user.bookuser.id,
@@ -96,7 +101,8 @@ class LoginViewSet(APIView):
                         'first_name': user.first_name, 
                         'last_name': user.last_name,
                         'reward_point': user.bookuser.reward_point,
-                        'role' : user.bookuser.role
+                        'role' : user.bookuser.role,
+                        'claimed_books': claimed_books_serializer
                     }
                     if hasattr(user, 'bookuser') and user.bookuser is not None:
                         user_data['phone'] = user.bookuser.phone
