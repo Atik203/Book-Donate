@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useLoginMutation } from "../../redux/features/user/userApi";
 import { setUser } from "../../redux/features/user/userSLice";
@@ -16,6 +16,7 @@ type FormData = {
 
 const Login = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
   const [Login] = useLoginMutation();
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -47,7 +48,9 @@ const Login = () => {
         }
         dispatch(setUser({ token, user }));
         toast.success("Logged in successfully", { id: toastId });
-        navigate("/");
+        const from = (location?.state?.from as string) || "/";
+
+        navigate(from, { replace: true });
       })
       .catch((error) => {
         const message = error.data.message;
