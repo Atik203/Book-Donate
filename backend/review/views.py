@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from rest_framework import status, viewsets
+from rest_framework import serializers, status, viewsets
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from book.models import Book
 from user.models import BookUser
 
-# Create your views here.
 from .models import Review
 from .serializers import PostReviewSerializer, ReviewSerializer
 
@@ -34,24 +34,15 @@ class ReviewViewSet(viewsets.ModelViewSet):
             
         return queryset
 
-class PostReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
-    serializer_class = PostReviewSerializer
-    
-    # def perform_create(self, serializer):
-    #     user_id = self.request.data.get('user')
-    #     book_id = self.request.data.get('book')
-    #     print(user_id)
-    #     print(book_id)
-    #     try:
-    #         user = BookUser.objects.get(user__id=user_id)
-    #     except BookUser.DoesNotExist:
-    #         return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-        
-    #     try:
-    #         book = Book.objects.get(id=book_id)
-    #     except Book.DoesNotExist:
-    #         return Response({'error': 'Book does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-        
-    #     serializer.save(user=user, book=book)    
+
+class PostReviewAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = PostReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                return Response({'success': True, 'message': 'Review posted successfully'}, status=status.HTTP_201_CREATED)
+            except serializers.ValidationError as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
