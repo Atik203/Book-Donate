@@ -219,6 +219,7 @@ const BookDetails = () => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      placeholder="Select Rating"
                       label="Select Rating"
                       className="text-xl font-bold text-black bg-base-50"
                     >

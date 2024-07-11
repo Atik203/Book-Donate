@@ -1,42 +1,46 @@
 import {
   cn,
   Input,
-  Listbox,
-  ListboxItem,
   Pagination,
   PaginationItemRenderProps,
   PaginationItemType,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
-import { Selection } from "@react-types/shared";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { FaFilter } from "react-icons/fa";
 import { IoSearchCircleOutline } from "react-icons/io5";
-import { useGetAllBooksQuery } from "../../redux/features/book/bookApi";
+import {
+  useGetAllBooksQuery,
+  useGetAllGenresQuery,
+} from "../../redux/features/book/bookApi";
 import { TBook } from "../../types/book.types";
+import { genreKeyLabelGenerator } from "../../utils/genreKeyLabelGenerator";
 import { ChevronIcon } from "../ChevronIcon/ChevronIcon";
 import ErrorComponent from "../ErrorComponent/ErrorComonent";
-import { ListboxWrapper } from "../ListBoxWrapper/ListBoxWrapper";
 import PopularBookCard from "../PopularBookCard/PopularBookCard";
+const RATING_OPTIONS = [
+  { key: "⭐", label: "⭐" },
+  { key: "⭐⭐", label: "⭐⭐" },
+  { key: "⭐⭐⭐", label: "⭐⭐⭐" },
+  { key: "⭐⭐⭐⭐", label: "⭐⭐⭐⭐" },
+  { key: "⭐⭐⭐⭐⭐", label: "⭐⭐⭐⭐⭐" },
+];
+export type TGenre = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const GENRE: {
+  key: string;
+  label: string;
+}[] = [];
 
 const BookFilter = () => {
-  const filters: string[] = ["Genre", "Condition", "Status"];
-  const [selectedKeys, setSelectedKeys] = useState(new Set(["Filter Books"]));
-  const selectedValue = useMemo(
-    () => Array.from(selectedKeys).join(", "),
-    [selectedKeys]
-  );
-
-  const handleSelectionChange = (keys: Selection) => {
-    const newKeys = new Set<string>();
-    for (const key of keys) {
-      newKeys.add(String(key));
-    }
-    setSelectedKeys(newKeys);
-  };
-
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [id, setId] = useState(null);
 
   const query = {
     page: currentPage,
@@ -46,7 +50,10 @@ const BookFilter = () => {
   };
 
   const { data, error, isFetching, isLoading } = useGetAllBooksQuery(query);
+  const { data: genreData } = useGetAllGenresQuery(undefined);
 
+  const genres = genreData?.results;
+  genreKeyLabelGenerator(genres);
   if (error instanceof Error) return <ErrorComponent message={error.message} />;
   const books: TBook[] = data?.results ?? [];
 
@@ -96,7 +103,6 @@ const BookFilter = () => {
       );
     }
 
-    // cursor is the default item
     return (
       <button
         key={key}
@@ -127,35 +133,35 @@ const BookFilter = () => {
             input: "bg-white my-input text-[#E3C3C3]",
             inputWrapper: "bg-white",
           }}
-          placeholder={`${selectedValue ? selectedValue : "Filter books"}`}
+          placeholder={`Filter books`}
           startContent={<FaFilter size={18} className="text-[#E3C3C3]" />}
           type="search"
         />
-        <div className="flex flex-col gap-4 mt-1">
-          <Listbox
-            variant="solid"
-            disallowEmptySelection
-            selectionMode="single"
-            selectedKeys={selectedKeys}
-            onSelectionChange={handleSelectionChange}
+        <div className="my-2">
+          <Select
+            label="Book Rating"
+            placeholder="Select a rating..."
+            color="warning"
+            className="max-w-md text-lg font-semibold text-black my-1"
           >
-            {filters.map((filter) => (
-              <ListboxItem
-                key={filter}
-                className="p-0 m-0"
-                classNames={{
-                  selectedIcon: "hidden",
-                }}
-              >
-                <ListboxWrapper selected={selectedKeys.has(filter)}>
-                  {filter}
-                </ListboxWrapper>
-              </ListboxItem>
+            {RATING_OPTIONS.map((rating) => (
+              <SelectItem className="font-bold text-lg" key={rating.key}>
+                {rating.label}
+              </SelectItem>
             ))}
-          </Listbox>
-          <p className="text-small px-2 font-semibold">
-            Selected Filter: {selectedValue}
-          </p>
+          </Select>
+          <Select
+            label="Book Genres"
+            placeholder="Select a genre"
+            color="warning"
+            className="max-w-md text-lg font-semibold text-black my-1"
+          >
+            {GENRE?.map((genre) => (
+              <SelectItem className="font-bold text-lg" key={genre.key}>
+                {genre.label}
+              </SelectItem>
+            ))}
+          </Select>
         </div>
       </div>
       <div className="md:col-span-3">
