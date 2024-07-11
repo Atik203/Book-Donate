@@ -37,6 +37,12 @@ const bookApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getAllGenres: builder.query({
+      query: () => ({
+        url: `/book/genre/`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -44,4 +50,5 @@ export const {
   useGetPopularBooksQuery,
   useGetAllBooksQuery,
   useGetSingleBookQuery,
+  useGetAllGenresQuery,
 } = bookApi;
