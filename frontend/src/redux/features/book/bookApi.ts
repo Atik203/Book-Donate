@@ -9,7 +9,17 @@ const bookApi = baseApi.injectEndpoints({
       }),
     }),
     getAllBooks: builder.query({
-      query: ({ page, search, id, page_size }) => {
+      query: ({
+        page,
+        search,
+        id,
+        page_size,
+        genre,
+        status,
+        condition,
+        rating,
+        author,
+      }) => {
         const params = new URLSearchParams();
 
         if (id) {
@@ -24,6 +34,27 @@ const bookApi = baseApi.injectEndpoints({
         if (page_size) {
           params.append("page_size", page_size.toString());
         }
+
+        if (genre) {
+          params.append("genre", genre);
+        }
+        if (status) {
+          params.append("status", status);
+        }
+
+        if (condition) {
+          params.append("condition", condition);
+        }
+
+        if (rating) {
+          params.append("rating", rating);
+        }
+
+        if (author) {
+          author = encodeURIComponent(author).replace(/%20/g, "+");
+          params.append("author", author);
+        }
+
         return {
           url: `/book/list/`,
           method: "GET",
@@ -43,6 +74,12 @@ const bookApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getAllAuthors: builder.query({
+      query: () => ({
+        url: `/book/authors/`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -51,4 +88,5 @@ export const {
   useGetAllBooksQuery,
   useGetSingleBookQuery,
   useGetAllGenresQuery,
+  useGetAllAuthorsQuery,
 } = bookApi;

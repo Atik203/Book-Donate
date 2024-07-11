@@ -8,6 +8,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { UserReviewProps } from "../../components/UserReview/UserReview";
+import { RATING_OPTIONS } from "../../constants/book.contants";
 import { useGetSingleBookQuery } from "../../redux/features/book/bookApi";
 import {
   useGetSingleBookReviewQuery,
@@ -16,13 +17,6 @@ import {
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { TBook } from "../../types/book.types";
-const RATING_OPTIONS = [
-  { key: "⭐", label: "⭐" },
-  { key: "⭐⭐", label: "⭐⭐" },
-  { key: "⭐⭐⭐", label: "⭐⭐⭐" },
-  { key: "⭐⭐⭐⭐", label: "⭐⭐⭐⭐" },
-  { key: "⭐⭐⭐⭐⭐", label: "⭐⭐⭐⭐⭐" },
-];
 
 const BookDetails = () => {
   const location = useLocation();
