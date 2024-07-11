@@ -82,7 +82,6 @@ const bookApi = baseApi.injectEndpoints({
     }),
     claimedBook: builder.mutation({
       query: (submitData) => {
-        console.log(submitData);
         return {
           url: `/book/claimed-book/`,
           method: "POST",

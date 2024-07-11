@@ -53,7 +53,6 @@ const BookDetails = () => {
     });
   const [PostReview] = usePostReviewMutation();
   const [claimedBook] = useClaimedBookMutation();
-
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
   if (isFetching) return <div>Fetching...</div>;
@@ -100,12 +99,21 @@ const BookDetails = () => {
       } else {
         reset();
         toast.success("Review submitted successfully", { id: toastId });
-        refetchReview(); // Refetch the reviews after successful submission
+        refetchReview();
       }
     } catch (error) {
       toast.error("Failed to submit review", { id: toastId });
     }
   };
+
+  // check if book is claimed by the current user
+
+  const claimedBooks = currentUser?.claimed_books;
+  const isBookClaimed = claimedBooks?.some(
+    (book) => book.id === Number(bookId)
+  );
+
+  console.log(isBookClaimed);
 
   const handleBookClaim = async () => {
     const claimed_by = currentUser?.id as number;
@@ -219,9 +227,9 @@ const BookDetails = () => {
             </div>
           ))
         ) : (
-          <p>No reviews yet.</p>
+          <p>No reviews yet. Claim the book for submit a review</p>
         )}
-        {isAuthenticated && (
+        {isAuthenticated && isBookClaimed && (
           <div className="mt-6">
             <h3 className="text-lg font-semibold">Leave a Comment</h3>
             <form onSubmit={handleSubmit(onSubmit)}>
