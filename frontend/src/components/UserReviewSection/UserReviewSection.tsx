@@ -2,6 +2,7 @@ import Marquee from "react-fast-marquee";
 
 import { toast } from "sonner";
 import { useGetAllReviewsQuery } from "../../redux/features/review/reviewApi";
+import TitleDescriptionBlock from "../TitleDescriptionBlock/TitleDescriptionBlock";
 import UserReview, { UserReviewProps } from "./../UserReview/UserReview";
 
 const UserReviewSection = () => {
@@ -26,12 +27,18 @@ const UserReviewSection = () => {
   }
 
   return (
-    <div className="bg-gray-100 my-8">
-      <Marquee gradient={true} speed={50}>
-        {reviews?.map((review: UserReviewProps) => (
-          <UserReview key={review.id} review={review} />
-        ))}
-      </Marquee>
+    <div className="bg-white shadow-md rounded-md py-24">
+      <TitleDescriptionBlock
+        title="Clients Review about us"
+        description="We provide the best popular available books. Check out our client review below."
+      />
+      <div className="bg-gray-100 my-8">
+        <Marquee gradient={true} speed={50}>
+          {reviews?.map((review: UserReviewProps) => (
+            <UserReview key={review.id} review={review} />
+          ))}
+        </Marquee>
+      </div>
     </div>
   );
 };
