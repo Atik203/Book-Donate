@@ -26,7 +26,7 @@ class BookViewSet(viewsets.ModelViewSet):
     pagination_class = BookPagination
     serializer_class = BookSerializers
     filter_backends = [SearchFilter]
-    search_fields = ['title', 'author', 'genre__slug', 'publisher','condition','status']
+    search_fields = ['title', 'author', 'genre__slug', 'publisher','condition','status','genre__name','condition','status','author']
     
     # query with id
     def get_queryset(self):
