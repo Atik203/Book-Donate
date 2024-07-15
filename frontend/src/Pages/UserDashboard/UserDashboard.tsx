@@ -1,3 +1,4 @@
+import ChangePasswordModal from "../../components/ChangePasswordModal/ChangePasswordModal";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 
@@ -5,6 +6,10 @@ const UserDashboard = () => {
   const user = useAppSelector((state: RootState) => state.user.user);
 
   if (!user) return <div>Loading...</div>;
+
+  const handleChangePassword = () => {
+    // Open the modal
+  };
 
   return (
     <div className=" bg-gray-200 flex items-center justify-center">
@@ -22,9 +27,7 @@ const UserDashboard = () => {
           <p className="mt-2 text-gray-700">{user.email}</p>
           <p className="mt-2 text-gray-700">{user.phone}</p>
           <div className="mt-4">
-            <span className="px-4 py-2 bg-green-500 text-white rounded-full">
-              Reward Points: {user.reward_point}
-            </span>
+            <ChangePasswordModal />
           </div>
         </div>
       </div>
