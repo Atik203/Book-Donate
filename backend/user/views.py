@@ -18,7 +18,7 @@ from book.serializers import BookSerializers
 
 from .models import BookUser
 from .serializers import (BookUserSerializers, LoginSerializer,
-                          RegistrationSerializer)
+                          PasswordChangeSerializer, RegistrationSerializer)
 
 
 def send_confirm_email(confirm_link,subject,template_name,email):
@@ -125,4 +125,21 @@ class LogOutViewSet(APIView):
             return Response("Error Something")        
         return Response("Logged out successfully")
 
-               
+class PasswordChangeViewSet(APIView):
+    serializer_class = PasswordChangeSerializer
+    def post(self, request):
+        try:
+            serializer = self.serializer_class(data = request.data)
+            if serializer.is_valid():
+                old_password = serializer.validated_data['old_password']
+                new_password = serializer.validated_data['new_password']
+                user = authenticate(username = request.user.username, password = old_password)
+                if user:
+                    user.set_password(new_password)
+                    user.save()
+                    return Response({'success': True, 'message': 'Password changed successfully'})
+                else:
+                    return Response({'error': 'Invalid credentials'})
+        except Exception as e:
+            return Response({'error': str(e)})    
+        return Response(serializer.errors)               

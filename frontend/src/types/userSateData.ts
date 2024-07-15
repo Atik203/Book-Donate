@@ -18,3 +18,9 @@ export interface UserState {
   user: TUser | null;
   isAuthenticated: boolean;
 }
+
+export type TChangePassword = {
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
+};
