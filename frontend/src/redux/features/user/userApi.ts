@@ -26,9 +26,29 @@ const userApi = baseApi.injectEndpoints({
         url: `/user/list/?id=${id}`,
         method: "GET",
       }),
+      providesTags: ["User"],
+    }),
+    getClaimedBooks: builder.query({
+      query: (id: number) => ({
+        url: `/book/user-claimed-book/${id}/`,
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
+    getDonatedBooks: builder.query({
+      query: (id: number) => ({
+        url: `/book/user-donated-book/${id}/`,
+        method: "GET",
+      }),
+      providesTags: ["User"],
     }),
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useGetSingleUserQuery } =
-  userApi;
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useGetSingleUserQuery,
+  useGetClaimedBooksQuery,
+  useGetDonatedBooksQuery,
+} = userApi;

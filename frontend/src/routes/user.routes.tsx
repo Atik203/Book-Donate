@@ -1,19 +1,24 @@
-import ContactUs from "../Pages/ContactUs/ContactUs";
+import MyDonatedBook from "../Pages/MyDonatedBook/MyDonatedBook";
 import UserDashboard from "../Pages/UserDashboard/UserDashboard";
 
 export const userPaths = [
   {
-    name: "Dashboard",
+    name: "Profile",
     path: "dashboard",
     element: <UserDashboard />,
   },
   {
-    name: "Profile",
+    name: "Book Management",
     children: [
       {
         name: "My Donated Books",
-        path: "donated-books",
-        element: <ContactUs />,
+        path: "my-donated-book",
+        element: <MyDonatedBook />,
+      },
+      {
+        name: "My Claimed Books",
+        path: "my-claimed-book",
+        element: <MyDonatedBook />,
       },
     ],
   },

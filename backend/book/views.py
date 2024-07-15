@@ -1,17 +1,20 @@
 from django.db.models import Avg, Case, FloatField, IntegerField, Value, When
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
-from rest_framework import serializers, status, viewsets
+from rest_framework import generics, serializers, status, viewsets
 from rest_framework.filters import BaseFilterBackend, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from review.models import Review
+from user.models import BookUser
 
 from .models import Book, Genre
 from .serializers import (AuthorSerializers, BookSerializers,
-                          ClaimedBookSerializers, GenreSerializers)
+                          ClaimedBookSerializers, GenreSerializers,
+                          UserClaimedBookSerializers,
+                          UserDonatedBookSerializers)
 
 
 class BookPagination(PageNumberPagination):
@@ -102,3 +105,20 @@ class ClaimBookAPIView(APIView):
             except serializers.ValidationError as e:
                 return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+
+class UserClaimedBooksView(generics.ListAPIView):
+    serializer_class = UserClaimedBookSerializers
+
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return Book.objects.filter(claimed_by__id=id)
+
+class UserDonatedBooksView(generics.ListAPIView):
+    serializer_class = UserDonatedBookSerializers
+
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return Book.objects.filter(donated_by__id=id)    
