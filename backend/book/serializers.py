@@ -53,3 +53,15 @@ class ClaimedBookSerializers(serializers.ModelSerializer):
         user.save()
         book.save()
         return book
+    
+class UserClaimedBookSerializers(serializers.ModelSerializer):
+    genre = GenreSerializers(many=True)
+    class Meta:
+        model = Book
+        fields = '__all__'
+        
+class UserDonatedBookSerializers(serializers.ModelSerializer):
+    genre = GenreSerializers(many=True)
+    class Meta:
+        model = Book
+        fields = '__all__'            

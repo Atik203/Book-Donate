@@ -91,6 +91,7 @@ const bookApi = baseApi.injectEndpoints({
           },
         };
       },
+      invalidatesTags: ["Book", "User"],
     }),
   }),
 });

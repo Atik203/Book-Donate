@@ -18,6 +18,7 @@ import {
   useGetSingleBookReviewQuery,
   usePostReviewMutation,
 } from "../../redux/features/review/reviewApi";
+import { useGetClaimedBooksQuery } from "../../redux/features/user/userApi";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { TBook } from "../../types/book.types";
@@ -52,7 +53,20 @@ const BookDetails = () => {
       refetchOnReconnect: true,
     });
   const [PostReview] = usePostReviewMutation();
+
   const [claimedBook] = useClaimedBookMutation();
+
+  const { data: userClaimedBookData } = useGetClaimedBooksQuery(
+    currentUser?.id as number,
+    {
+      skip: !currentUser?.id,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
+    }
+  );
+
+  const userClaimedBook = userClaimedBookData?.results ?? [];
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
   if (isFetching) return <div>Fetching...</div>;
@@ -76,8 +90,6 @@ const BookDetails = () => {
     isbn,
     donated_by,
   } = book;
-
-  const isButtonDisabled = status !== "Available" || stock <= 0;
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { comment, rating } = data;
@@ -108,12 +120,12 @@ const BookDetails = () => {
 
   // check if book is claimed by the current user
 
-  const claimedBooks = currentUser?.claimed_books;
-  const isBookClaimed = claimedBooks?.some(
-    (book) => book.id === Number(bookId)
+  const isBookClaimed = userClaimedBook?.some(
+    (book: TBook) => book.id === Number(bookId)
   );
 
-  console.log(isBookClaimed);
+  const isButtonDisabled =
+    status !== "Available" || stock <= 0 || isBookClaimed;
 
   const handleBookClaim = async () => {
     const claimed_by = currentUser?.id as number;
