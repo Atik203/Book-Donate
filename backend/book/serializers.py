@@ -107,6 +107,43 @@ class AddBookSerializers(serializers.ModelSerializer):
         
         return value
               
+
+class UpdateBookSerializers(serializers.ModelSerializer):
+    genre = serializers.CharField(write_only=True, required=False)
+    donated_by = serializers.PrimaryKeyRelatedField(queryset=BookUser.objects.all(), required=False)
+    stock = serializers.IntegerField(required=False)
+    pages = serializers.IntegerField(required=False)
+    reward_point = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = Book
+        fields = ['title', 'author', 'description', 'genre', 'reward_point', 'pages', 'stock', 'donated_by', 'publisher', 'publication_date', 'isbn', 'image', 'condition']
+
+    def update(self, instance, validated_data):
+        genre_str = validated_data.pop('genre', None)
+        if genre_str:
+            genre_names = [name.strip() for name in genre_str.split(',')]
+            genres = []
+            for name in genre_names:
+                genre, created = Genre.objects.get_or_create(name=name)
+                genres.append(genre)
+            instance.genre.set(genres)
+        
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+    def validate_genre(self, value):
+        genre_names = [name.strip() for name in value.split(',')]
+        if not genre_names:
+            raise serializers.ValidationError("Genre field cannot be empty.")
+        
+        for name in genre_names:
+            if not Genre.objects.filter(name=name).exists():
+                raise serializers.ValidationError(f"Genre '{name}' does not exist.")
+        
+        return value
     
 
     

@@ -1,4 +1,5 @@
 import { Avatar } from "@nextui-org/react";
+import { Link } from "react-router-dom";
 import { useGetPendingBookQuery } from "../../redux/features/book/bookApi";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
@@ -91,19 +92,26 @@ const PendingBook = () => {
                   </div>
                 </div>
               </td>
-              <td className="flex items-center justify-center gap-2">
-                <button
-                  title="Details"
-                  className="hover:text-navPrimary font-bold btn bg-red-500 btn-sm text-white"
-                >
-                  Delete
-                </button>
-
+              <td className="flex items-center justify-center gap-1">
                 <button
                   title="Approved"
-                  className="hover:text-navPrimary font-bold btn bg-green-500 btn-sm text-white"
+                  className="hover:text-navPrimary btn bg-green-500 btn-sm text-white"
                 >
                   Approved
+                </button>
+                <Link to={`/update-book/?id=${book.id}`}>
+                  <button
+                    title="Approved"
+                    className="hover:text-navPrimary btn bg-yellow-500 btn-sm text-white"
+                  >
+                    Edit
+                  </button>
+                </Link>
+                <button
+                  title="Details"
+                  className="hover:text-navPrimary btn bg-red-500 btn-sm text-white"
+                >
+                  Delete
                 </button>
               </td>
             </tr>
