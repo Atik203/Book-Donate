@@ -102,6 +102,7 @@ const bookApi = baseApi.injectEndpoints({
           body: submitData,
         };
       },
+      invalidatesTags: ["Book", "User"],
     }),
     addGenre: builder.mutation({
       query: (submitData) => {
@@ -111,6 +112,7 @@ const bookApi = baseApi.injectEndpoints({
           body: submitData,
         };
       },
+      invalidatesTags: ["Book", "User"],
     }),
   }),
 });

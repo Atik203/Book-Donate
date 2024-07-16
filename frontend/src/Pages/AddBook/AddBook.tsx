@@ -10,12 +10,14 @@ import {
   useAddBookMutation,
   useGetAllGenresQuery,
 } from "../../redux/features/book/bookApi";
+import { useGetDonatedBooksQuery } from "../../redux/features/user/userApi";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { genreKeyLabelGenerator } from "../../utils/genreKeyLabelGenerator";
 
 const AddBook = () => {
   const user = useAppSelector((state: RootState) => state.user.user);
+  const { refetch } = useGetDonatedBooksQuery(user?.id as number);
 
   const { data: genreData } = useGetAllGenresQuery(undefined);
   const genres = genreData?.results;
@@ -41,7 +43,7 @@ const AddBook = () => {
     formData.append("description", data.description);
     formData.append("image", data.image[0]);
     formData.append("donated_by", user?.id?.toString() as string);
-    formData.append("genres", Array.from(values).join(","));
+    formData.append("genre", Array.from(values).join(","));
     // @ts-expect-error condition is string
     formData.append("condition", condition?.currentKey as string);
     formData.append("donated_by", user?.id?.toString() as string);
@@ -50,10 +52,12 @@ const AddBook = () => {
     try {
       const result = await AddBook(formData).unwrap();
 
-      if (result) {
+      if (result.success) {
         toast.success("Book added successfully", { id: toastId });
+        refetch();
+      } else {
+        toast.error("Failed to add book", { id: toastId });
       }
-      toast.error("Failed to add book", { id: toastId });
     } catch (error) {
       toast.error("Failed to add book", { id: toastId });
     }
