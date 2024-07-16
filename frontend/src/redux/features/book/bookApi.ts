@@ -114,6 +114,24 @@ const bookApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Book", "User"],
     }),
+    getPendingBook: builder.query({
+      query: () => {
+        return {
+          url: `/book/pending/`,
+          method: "GET",
+        };
+      },
+    }),
+    approveBook: builder.mutation({
+      query: (submitData) => {
+        return {
+          url: `/book/approve-book/`,
+          method: "POST",
+          body: submitData,
+        };
+      },
+      invalidatesTags: ["Book", "User"],
+    }),
   }),
 });
 
@@ -126,4 +144,6 @@ export const {
   useClaimedBookMutation,
   useAddBookMutation,
   useAddGenreMutation,
+  useGetPendingBookQuery,
+  useApproveBookMutation,
 } = bookApi;

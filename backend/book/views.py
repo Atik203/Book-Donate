@@ -15,7 +15,7 @@ from .models import Book, Genre
 from .serializers import (AddBookSerializers, AddGenreSerializer,
                           AuthorSerializers, BookSerializers,
                           ClaimedBookSerializers, GenreSerializers,
-                          UserClaimedBookSerializers,
+                          PendingBookSerializers, UserClaimedBookSerializers,
                           UserDonatedBookSerializers)
 
 
@@ -28,7 +28,7 @@ class BookPagination(PageNumberPagination):
 
 
 class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
+    queryset = Book.objects.filter(approve='Approved')
     pagination_class = BookPagination
     serializer_class = BookSerializers
     filter_backends = [SearchFilter]
@@ -70,7 +70,7 @@ class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreSerializers    
     
 class PopularBooksView(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
+    queryset = Book.objects.filter(approve='Approved')
     serializer_class = BookSerializers
     def get_queryset(self):
         # Convert star ratings to numerical values and calculate the average
@@ -140,4 +140,8 @@ class AddGenreView(APIView):
         if serializer.is_valid():
             genre = serializer.save()
             return Response({'id': genre.id, 'name': genre.name, 'slug': genre.slug}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)       
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+
+class PendingBooksView(viewsets.ModelViewSet):
+    serializer_class = PendingBookSerializers
+    queryset = Book.objects.filter(approve='Pending')        
