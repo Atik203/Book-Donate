@@ -20,7 +20,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [Login] = useLoginMutation();
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>("abcd1234");
+  const [password, setPassword] = useState<string>("abcd12345");
 
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: { userName: "Atik203" },
