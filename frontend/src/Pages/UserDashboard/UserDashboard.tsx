@@ -8,10 +8,6 @@ const UserDashboard = () => {
 
   if (!user) return <div>Loading...</div>;
 
-  const handleChangePassword = () => {
-    // Open the modal
-  };
-
   return (
     <div className=" bg-gray-200 flex items-center justify-center">
       <div className="bg-white shadow-lg rounded-lg p-4 w-full max-w-md">
