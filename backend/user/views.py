@@ -9,8 +9,10 @@ from django.core.mail import EmailMessage
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -56,8 +58,10 @@ class BookUserViewSet(viewsets.ModelViewSet):
         return queryset
     
 
-class RegistrationViewSet(APIView):
+
+class RegistrationView(APIView):
     serializer_class = RegistrationSerializer
+   
     def post(self, request):
         try:
             serializer = self.serializer_class(data = request.data)
