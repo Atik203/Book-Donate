@@ -42,6 +42,7 @@ const AddBook = () => {
     formData.append("image", data.image[0]);
     formData.append("donated_by", user?.id?.toString() as string);
     formData.append("genres", Array.from(values).join(","));
+    // @ts-expect-error condition is string
     formData.append("condition", condition?.currentKey as string);
     formData.append("donated_by", user?.id?.toString() as string);
 

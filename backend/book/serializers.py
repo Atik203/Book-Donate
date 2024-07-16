@@ -77,26 +77,21 @@ class AddBookSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_internal_value(self, data):
-        # Convert genres from comma-separated string of names to list of Genre instances
         genres_str = data.get('genres', '')
         genre_names = [name.strip() for name in genres_str.split(',')]
         genres = []
         for name in genre_names:
             try:
                 genre = Genre.objects.get(name=name)
-                print(genre.slug)
                 print(genre.pk)
                 genres.append(genre.pk)
             except Genre.DoesNotExist:
                 raise serializers.ValidationError({"genres": f"Genre '{name}' does not exist."})
 
-        
-        # Convert reward_point, pages, and stock to integers
         data['reward_point'] = int(data.get('reward_point', 0))
         data['pages'] = int(data.get('pages', 0))
         data['stock'] = int(data.get('stock', 0))
 
-        # Handle donated_by field
         donated_by_id = data.get('donated_by')
         if donated_by_id is not None:
             try:
@@ -106,7 +101,6 @@ class AddBookSerializers(serializers.ModelSerializer):
             except (ValueError, BookUser.DoesNotExist):
                 raise serializers.ValidationError("Invalid donated_by ID.")
 
-        # Update data with the correct genre instances
         data['genre'] = genres
 
         return super().to_internal_value(data)
@@ -116,4 +110,20 @@ class AddBookSerializers(serializers.ModelSerializer):
         book = super().create(validated_data)
         book.genre.set(genres)
         return book
+        
+    
+
+    
+class AddGenreSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Genre
+            fields = ['name']
+
+        def create(self, validated_data):
+            name = validated_data['name']
+            slug = name.lower().replace(' ', '-')
+            genre, created = Genre.objects.get_or_create(name=name, defaults={'slug': slug})
+            return genre
+
+            
                

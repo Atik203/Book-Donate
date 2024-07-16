@@ -103,6 +103,15 @@ const bookApi = baseApi.injectEndpoints({
         };
       },
     }),
+    addGenre: builder.mutation({
+      query: (submitData) => {
+        return {
+          url: `/book/add-genre/`,
+          method: "POST",
+          body: submitData,
+        };
+      },
+    }),
   }),
 });
 
@@ -114,4 +123,5 @@ export const {
   useGetAllAuthorsQuery,
   useClaimedBookMutation,
   useAddBookMutation,
+  useAddGenreMutation,
 } = bookApi;
