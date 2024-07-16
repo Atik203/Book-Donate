@@ -9,6 +9,7 @@ import Gifts from "../Pages/Gifts/Gifts";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/SignUp/SignUp";
+import UpdateBook from "../Pages/UpdateBook/UpdateBook";
 import Root from "../Root/Root";
 import { routeGenerator } from "../utils/routeGenerator";
 import { adminPaths } from "./admin.routes";
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "/gifts",
         element: <Gifts />,
+      },
+      {
+        path: "/update-book",
+        element: <UpdateBook />,
       },
     ],
   },

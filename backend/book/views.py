@@ -133,6 +133,15 @@ class AddBookView(APIView):
             serializer.save()
             return Response({'success': True, 'message': 'Book added successfully'})
         return Response(serializer.errors, status=400)
+class UpdateBookView(APIView):
+    parser_classes = (FormParser, MultiPartParser)
+    def put(self, request, pk):
+        book = Book.objects.get(pk=pk)
+        serializer = AddBookSerializers(book, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': True, 'message': 'Book updated successfully'})
+        return Response(serializer.errors, status=400)    
     
 class AddGenreView(APIView):
     def post(self, request):
