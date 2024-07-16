@@ -1,4 +1,4 @@
-import { TChnagePassword } from "../../../types/userSateData";
+import { TChangePassword } from "../../../types/userSateData";
 import { baseApi } from "../../api/baseApi";
 
 type TUserInfo = {
@@ -45,7 +45,7 @@ const userApi = baseApi.injectEndpoints({
     }),
 
     changePassword: builder.mutation({
-      query: (data: TChnagePassword) => ({
+      query: (data: TChangePassword) => ({
         url: "/user/change-password/",
         method: "POST",
         body: data,

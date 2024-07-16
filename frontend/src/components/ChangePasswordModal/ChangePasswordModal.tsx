@@ -10,9 +10,13 @@ import {
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useChangePasswordMutation } from "../../redux/features/user/userApi";
+import { useAppSelector } from "../../redux/hooks";
+import { RootState } from "../../redux/store";
+import { TChangePassword } from "../../types/userSateData";
 
 export default function ChangePasswordModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const currentUser = useAppSelector((state: RootState) => state.user.user);
 
   const [changePassword] = useChangePasswordMutation();
   const {
@@ -22,10 +26,21 @@ export default function ChangePasswordModal() {
   } = useForm();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
     // Handle form submission logic here
+
+    if (data.newPassword !== data.confirmPassword) {
+      toast.error("New password and confirm password do not match");
+      return;
+    }
+
+    const submitData = {
+      username: currentUser?.username,
+      old_password: data.oldPassword,
+      new_password: data.newPassword,
+      confirm_password: data.confirmPassword,
+    };
     const toastId = toast.loading("Changing password...");
-    const result = await changePassword(data).unwrap();
+    const result = await changePassword(submitData as TChangePassword).unwrap();
 
     if (result.success) {
       toast.success("Password changed successfully", { id: toastId });

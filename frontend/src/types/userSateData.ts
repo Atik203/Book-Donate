@@ -20,6 +20,7 @@ export interface UserState {
 }
 
 export type TChangePassword = {
+  username: string;
   old_password: string;
   new_password: string;
   confirm_password: string;

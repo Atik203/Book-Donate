@@ -1,4 +1,6 @@
 
+import logging
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
@@ -10,11 +12,14 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from book.models import Book
 from book.serializers import BookSerializers
+
+logger = logging.getLogger(__name__)
 
 from .models import BookUser
 from .serializers import (BookUserSerializers, LoginSerializer,
@@ -131,15 +136,19 @@ class PasswordChangeViewSet(APIView):
         try:
             serializer = self.serializer_class(data = request.data)
             if serializer.is_valid():
+                username = serializer.validated_data['username']
                 old_password = serializer.validated_data['old_password']
                 new_password = serializer.validated_data['new_password']
-                user = authenticate(username = request.user.username, password = old_password)
+                user = authenticate(username = username, password = old_password)
                 if user:
                     user.set_password(new_password)
                     user.save()
+                    logger.debug("Password changed successfully for user: %s", request.user.username)
                     return Response({'success': True, 'message': 'Password changed successfully'})
                 else:
+                    logger.debug("Serializer errors: %s", serializer.errors)
                     return Response({'error': 'Invalid credentials'})
         except Exception as e:
+            logger.error("Error changing password: %s", str(e))
             return Response({'error': str(e)})    
         return Response(serializer.errors)               
