@@ -3,9 +3,7 @@ import AddGenre from "../Pages/AddGenre/AddGenre";
 import AddGift from "../Pages/AddGift/AddGift";
 import AllUser from "../Pages/AllUser/AllUser";
 import BookListTable from "../Pages/BookListTable/BookListTable";
-import MyClaimedBook from "../Pages/MyClaimedBook/MyClaimedBook";
-import MyDonatedBook from "../Pages/MyDonatedBook/MyDonatedBook";
-import UpdateBook from "../Pages/UpdateBook/UpdateBook";
+import PendingBook from "../Pages/PendingBook/PendingBook";
 import UserDashboard from "../Pages/UserDashboard/UserDashboard";
 
 export const adminPaths = [
@@ -18,17 +16,7 @@ export const adminPaths = [
     name: "Book Management",
     children: [
       {
-        name: "My Donated Books",
-        path: "my-donated-book",
-        element: <MyDonatedBook />,
-      },
-      {
-        name: "My Claimed Books",
-        path: "my-claimed-book",
-        element: <MyClaimedBook />,
-      },
-      {
-        name: "Book List",
+        name: "All Books",
         path: "book-list",
         element: <BookListTable />,
       },
@@ -36,11 +24,6 @@ export const adminPaths = [
         name: "Add Book",
         path: "add-book",
         element: <AddBook />,
-      },
-      {
-        name: "Edit Book",
-        path: "edit-book",
-        element: <UpdateBook />,
       },
       {
         name: "Add Genre",
@@ -51,6 +34,11 @@ export const adminPaths = [
         name: "Add Gift",
         path: "add-gift",
         element: <AddGift />,
+      },
+      {
+        name: "Pending Books",
+        path: "pending-book",
+        element: <PendingBook />,
       },
     ],
   },
