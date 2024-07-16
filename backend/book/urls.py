@@ -2,9 +2,9 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (AuthorListAPIView, BookViewSet, ClaimBookAPIView,
-                    GenreViewSet, PopularBooksView, UserClaimedBooksView,
-                    UserDonatedBooksView)
+from .views import (AddBookView, AuthorListAPIView, BookViewSet,
+                    ClaimBookAPIView, GenreViewSet, PopularBooksView,
+                    UserClaimedBooksView, UserDonatedBooksView)
 
 router = DefaultRouter()
 
@@ -17,4 +17,5 @@ urlpatterns =[
     path('claimed-book/', ClaimBookAPIView.as_view(), name='claimed-book'),
     path('user-claimed-book/<int:id>/', UserClaimedBooksView.as_view(), name='user-claimed-books'),
     path('user-donated-book/<int:id>/', UserDonatedBooksView.as_view(), name='user-donated-books'),
+    path('add-book/',AddBookView.as_view(),name="add-book"),
 ]
