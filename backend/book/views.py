@@ -128,7 +128,7 @@ class UserDonatedBooksView(generics.ListAPIView):
 class AddBookView(APIView):
     parser_classes = (FormParser, MultiPartParser)
     def post(self, request):
-        serializer = AddBookSerializers(data=request.data)
+        serializer = AddBookSerializers(data=request.data,context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response({'success': True, 'message': 'Book added successfully'})

@@ -65,52 +65,47 @@ class UserDonatedBookSerializers(serializers.ModelSerializer):
         model = Book
         fields = '__all__'
 
+
 class AddBookSerializers(serializers.ModelSerializer):
-    genres = serializers.CharField(write_only=True)
-    reward_point = serializers.IntegerField(write_only=True)
-    pages = serializers.IntegerField(write_only=True)
-    stock = serializers.IntegerField(write_only=True)
-    donated_by = serializers.PrimaryKeyRelatedField(queryset=BookUser.objects.all(), write_only=True, required=False)
+    genre = serializers.CharField(write_only=True)
+    donated_by = serializers.PrimaryKeyRelatedField(queryset=BookUser.objects.all(), required=False)
+    stock = serializers.IntegerField()
+    pages = serializers.IntegerField()
+    reward_point = serializers.IntegerField()
 
     class Meta:
         model = Book
-        fields = '__all__'
-
-    def to_internal_value(self, data):
-        genres_str = data.get('genres', '')
-        genre_names = [name.strip() for name in genres_str.split(',')]
-        genres = []
-        for name in genre_names:
-            try:
-                genre = Genre.objects.get(name=name)
-                print(genre.pk)
-                genres.append(genre.pk)
-            except Genre.DoesNotExist:
-                raise serializers.ValidationError({"genres": f"Genre '{name}' does not exist."})
-
-        data['reward_point'] = int(data.get('reward_point', 0))
-        data['pages'] = int(data.get('pages', 0))
-        data['stock'] = int(data.get('stock', 0))
-
-        donated_by_id = data.get('donated_by')
-        if donated_by_id is not None:
-            try:
-                donated_by_id = int(donated_by_id)
-                donated_by = BookUser.objects.get(pk=donated_by_id)
-                data['donated_by'] = donated_by.pk
-            except (ValueError, BookUser.DoesNotExist):
-                raise serializers.ValidationError("Invalid donated_by ID.")
-
-        data['genre'] = genres
-
-        return super().to_internal_value(data)
+        fields = ['title', 'author', 'description', 'genre', 'reward_point', 'pages', 'stock', 'donated_by', 'publisher', 'publication_date', 'isbn', 'image', 'condition']
 
     def create(self, validated_data):
-        genres = validated_data.pop('genre')
-        book = super().create(validated_data)
+        genre_str = validated_data.pop('genre')
+        genre_names = [name.strip() for name in genre_str.split(',')]
+        
+        genres = []
+        for name in genre_names:
+            genre, created = Genre.objects.get_or_create(name=name)
+            genres.append(genre)
+        # Set donated_by to the current user if not provided
+        if 'donated_by' not in validated_data:
+            request = self.context.get('request')
+            if request and hasattr(request, 'user'):
+                validated_data['donated_by'] = request.user
+        
+        book = Book.objects.create(**validated_data)
         book.genre.set(genres)
         return book
+
+    def validate_genre(self, value):
+        genre_names = [name.strip() for name in value.split(',')]
+        if not genre_names:
+            raise serializers.ValidationError("Genre field cannot be empty.")
         
+        for name in genre_names:
+            if not Genre.objects.filter(name=name).exists():
+                raise serializers.ValidationError(f"Genre '{name}' does not exist.")
+        
+        return value
+              
     
 
     

@@ -35,14 +35,14 @@ const userApi = baseApi.injectEndpoints({
         url: `/book/user-claimed-book/${id}/`,
         method: "GET",
       }),
-      providesTags: ["User"],
+      providesTags: ["User", "Book"],
     }),
     getDonatedBooks: builder.query({
       query: (id: number) => ({
         url: `/book/user-donated-book/${id}/`,
         method: "GET",
       }),
-      providesTags: ["User"],
+      providesTags: ["User", "Book"],
     }),
     changePassword: builder.mutation({
       query: (data: TChangePassword) => ({
