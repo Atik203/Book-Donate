@@ -19,11 +19,9 @@ const Login = () => {
   const navigate = useNavigate();
   const [Login] = useLoginMutation();
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [password, setPassword] = useState<string>("abcd12345");
 
   const { register, handleSubmit } = useForm<FormData>({
-    defaultValues: { userName: "Atik203" },
+    defaultValues: { userName: "Atik203", password: "abcd12345" },
   });
 
   const onSubmit = handleSubmit((data) => {
@@ -118,7 +116,6 @@ const Login = () => {
                         type={isVisible ? "text" : "password"}
                         autoComplete="current-password"
                         required
-                        value={password}
                         {...register("password")}
                         className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />

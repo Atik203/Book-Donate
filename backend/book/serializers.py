@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from user.models import BookUser
+from user.serializers import BookUserSerializers
 
 from .models import Book, Genre
 
@@ -120,5 +121,17 @@ class AddGenreSerializer(serializers.ModelSerializer):
             genre, created = Genre.objects.get_or_create(name=name, defaults={'slug': slug})
             return genre
 
+
+
+ 
+
+
+class PendingBookSerializers(serializers.ModelSerializer):
+    genre = GenreSerializers(many=True)
+    donated_by = BookUserSerializers()
+    claimed_by = BookUserSerializers() 
+    class Meta:
+        model = Book
+        fields = '__all__'
             
                

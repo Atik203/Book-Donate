@@ -16,4 +16,5 @@ export type TBook = {
   stock: number;
   pages: number | null;
   reward_point: number;
+  approve: "Pending" | "Approved";
 };
