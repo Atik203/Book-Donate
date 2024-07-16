@@ -43,7 +43,6 @@ const userApi = baseApi.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
-
     changePassword: builder.mutation({
       query: (data: TChangePassword) => ({
         url: "/user/change-password/",
@@ -51,11 +50,18 @@ const userApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
-
     updateProfile: builder.mutation({
       query: (data: any) => ({
         url: "/user/update-profile/",
         method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    signup: builder.mutation({
+      query: (data: any) => ({
+        url: "/user/register/",
+        method: "POST",
         body: data,
       }),
       invalidatesTags: ["User"],
@@ -71,4 +77,5 @@ export const {
   useGetDonatedBooksQuery,
   useChangePasswordMutation,
   useUpdateProfileMutation,
+  useSignupMutation,
 } = userApi;

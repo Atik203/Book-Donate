@@ -1,14 +1,15 @@
-import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import axiosPublic from "../../axios/axiosPublic";
+import { toast } from "sonner";
+import { useSignupMutation } from "../../redux/features/user/userApi";
+
 type FormData = {
   username: string;
-  fullName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   phone: string;
   address: string;
@@ -18,14 +19,15 @@ type FormData = {
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const [Signup] = useSignupMutation();
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const { register, handleSubmit } = useForm<FormData>();
-  const onSubmit = handleSubmit((data) => {
-    const first_name = data.fullName.split(" ")[0];
-    const last_name = data.fullName.split(" ")[1];
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    if (data.password !== data.confirm_password) {
+      toast.error("Password does not match");
+      return;
+    }
 
     const userData = {
       username: data.username,
@@ -33,220 +35,238 @@ const SignUp = () => {
       phone: data.phone,
       address: data.address,
       password: data.password,
-      first_name: first_name,
-      last_name: last_name,
+      first_name: data.first_name,
+      last_name: data.last_name,
       confirm_password: data.confirm_password,
     };
 
-    axiosPublic
-      .post("/patient/register/", userData)
-      .then((res) => {
-        if (res.data.success) {
-          toast("Check your email to verify your account");
-          navigate("/login");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+    const toastId = toast.loading("Signing up...");
+    try {
+      const result = await Signup(userData).unwrap();
+
+      if (!result.success) {
+        toast.error("Failed to signup", { id: toastId });
+        return;
+      }
+
+      toast.success("Sign up successful, check your email to verify", {
+        id: toastId,
       });
-  });
+      navigate("/login");
+    } catch (error) {
+      toast.error("Sign up failed", { id: toastId });
+    }
+  };
+
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
 
   return (
-    <div className="min-h-screen my-12">
+    <div className="min-h-screen mt-10">
       <Helmet>
-        <title>Sign Up</title>
+        <title>Sign up</title>
       </Helmet>
-      <h1 className="text-center font-bold text-2xl md:text-4xl">Sign Up</h1>
-      <form
-        onSubmit={onSubmit}
-        className="max-w-sm mt-12 md:max-w-xl mx-auto space-y-10"
-      >
-        <Input
-          label="User Name"
-          className="font-bold"
-          radius="full"
-          isRequired
-          isClearable
-          maxLength={20}
-          classNames={{
-            label: "ml-2 no-asterisk",
-            errorMessage: "text-red-500 text-sm px-3",
-            input: "bg-white",
-            inputWrapper: "bg-white",
-          }}
-          variant="bordered"
-          size="lg"
-          labelPlacement="outside"
-          {...register("username", { required: true })}
-          placeholder="Enter your user name"
-        />
+      <div className="flex flex-1">
+        <div className="flex flex-1 flex-col justify-center px-2">
+          <div className="mx-auto w-full max-w-4xl">
+            <div className="text-center">
+              <h2 className="mt-4 text-3xl font-bold leading-9 tracking-tight text-gray-900">
+                Sign up
+              </h2>
+            </div>
+            <div className="mt-8 w-full">
+              <div>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                  <div className="flex items-center justify-center gap-4 w-full">
+                    <div className="min-w-[24rem] w-full">
+                      <label
+                        htmlFor="username"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        User Name
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          id="username"
+                          type="text"
+                          autoComplete="username"
+                          required
+                          {...register("username")}
+                          className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div className="min-w-[24rem] w-full">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Email
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          id="email"
+                          type="email"
+                          autoComplete="email"
+                          required
+                          {...register("email")}
+                          className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-        <Input
-          label="Full Name"
-          className="font-bold my-2"
-          radius="full"
-          isClearable
-          isRequired
-          variant="bordered"
-          size="lg"
-          maxLength={100}
-          labelPlacement="outside"
-          {...register("fullName", { required: true })}
-          placeholder="Enter your full name"
-          classNames={{
-            label: "ml-2 no-asterisk",
-            errorMessage: "text-red-500 text-sm px-3",
-            input: "bg-white",
-            inputWrapper: "bg-white",
-          }}
-        />
-        <Input
-          label="Email"
-          className="font-bold my-2"
-          radius="full"
-          isClearable
-          isRequired
-          variant="bordered"
-          size="lg"
-          type="email"
-          maxLength={100}
-          labelPlacement="outside"
-          {...register("email", { required: true })}
-          placeholder="Enter your email address"
-          classNames={{
-            label: "ml-2 no-asterisk",
-            errorMessage: "text-red-500 text-sm px-3",
-            input: "bg-white",
-            inputWrapper: "bg-white",
-          }}
-        />
-        <Input
-          label="Phone"
-          className="font-bold my-2 rounded-[136px]"
-          radius="full"
-          isClearable
-          isRequired
-          variant="bordered"
-          size="lg"
-          type="tel"
-          maxLength={11}
-          minLength={11}
-          labelPlacement="outside"
-          {...register("phone", {
-            required: true,
-          })}
-          placeholder="Enter your phone number"
-          classNames={{
-            label: "ml-2 no-asterisk",
-            errorMessage: "text-red-500 text-sm px-3",
-            input: "bg-white",
-            inputWrapper: "bg-white",
-          }}
-        />
-        <Input
-          label="Address"
-          className="font-bold my-2 rounded-[136px]"
-          radius="full"
-          isClearable
-          isRequired
-          variant="bordered"
-          size="lg"
-          labelPlacement="outside"
-          {...register("address", {
-            required: true,
-          })}
-          placeholder="Enter your Address"
-          classNames={{
-            label: "ml-2 no-asterisk",
-            errorMessage: "text-red-500 text-sm px-3",
-            input: "bg-white",
-            inputWrapper: "bg-white",
-          }}
-        />
-        <Input
-          label="Password"
-          className="font-bold my-2 rounded-[136px]"
-          radius="full"
-          variant="bordered"
-          size="lg"
-          isRequired
-          labelPlacement="outside"
-          {...register("password", {
-            required: true,
-          })}
-          placeholder="Enter your password"
-          classNames={{
-            label: "ml-2 no-asterisk",
-            errorMessage: "text-red-500 text-sm px-3",
-            input: "bg-white",
-            inputWrapper: "bg-white",
-          }}
-          endContent={
-            <button
-              className=""
-              type="button"
-              onClick={() => {
-                setIsVisible(!isVisible);
-              }}
-            >
-              {isVisible ? (
-                <FaEyeSlash className="text-2xl text-default-400 pointer-events-none" />
-              ) : (
-                <FaEye className="text-2xl text-default-400 pointer-events-none" />
-              )}
-            </button>
-          }
-          type={isVisible ? "text" : "password"}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Input
-          label="Confirm Password"
-          className="font-bold my-2 rounded-[136px]"
-          radius="full"
-          variant="bordered"
-          size="lg"
-          isRequired
-          labelPlacement="outside"
-          {...register("confirm_password", {
-            required: true,
-          })}
-          placeholder="Confirm your password"
-          classNames={{
-            label: "ml-2 no-asterisk",
-            errorMessage: "text-red-500 text-sm px-3",
-            input: "bg-white",
-            inputWrapper: "bg-white",
-          }}
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="min-w-[24rem] w-full">
+                      <label
+                        htmlFor="first_name"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        First Name
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          id="first_name"
+                          type="text"
+                          autoComplete="given-name"
+                          required
+                          {...register("first_name")}
+                          className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div className="min-w-[24rem] w-full">
+                      <label
+                        htmlFor="last_name"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Last Name
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          id="last_name"
+                          type="text"
+                          autoComplete="family-name"
+                          required
+                          {...register("last_name")}
+                          className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-        <Button
-          type="submit"
-          isDisabled={
-            password === "" ||
-            confirmPassword === "" ||
-            password !== confirmPassword
-          }
-          className="w-32 font-bold h-12 mx-auto bg-navPrimary text-white rounded-full flex items-center hover:bg-gray-300 hover:text-black"
-        >
-          Sign Up
-        </Button>
-      </form>
-      <div className="my-3 space-y-3">
-        <p className="text-gray-800 text-center">
-          Already have an account?{" "}
-          <Link
-            to={"/login"}
-            className="text-navPrimary hover:underline hover:text-green-800"
-          >
-            Login
-          </Link>
-        </p>
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="min-w-[24rem] w-full">
+                      <label
+                        htmlFor="address"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Address
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          id="address"
+                          type="text"
+                          autoComplete="address"
+                          required
+                          {...register("address")}
+                          className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div className="min-w-[24rem] w-full">
+                      <label
+                        htmlFor="phone"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Phone Number
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          id="phone"
+                          type="text"
+                          autoComplete="phone"
+                          required
+                          {...register("phone")}
+                          className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="min-w-[24rem] w-full">
+                      <label
+                        htmlFor="password"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Password
+                      </label>
+                      <div className="mt-2 relative">
+                        <input
+                          id="password"
+                          type={isVisible ? "text" : "password"}
+                          required
+                          {...register("password")}
+                          className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                        <button
+                          type="button"
+                          onClick={toggleVisibility}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                        >
+                          {isVisible ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="min-w-[24rem] w-full">
+                      <label
+                        htmlFor="confirm_password"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Confirm Password
+                      </label>
+                      <div className="mt-2 relative">
+                        <input
+                          id="confirm_password"
+                          type={isVisible ? "text" : "password"}
+                          required
+                          {...register("confirm_password")}
+                          className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                        <button
+                          type="button"
+                          onClick={toggleVisibility}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                        >
+                          {isVisible ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <button
+                      type="submit"
+                      className={`flex  min-w-[24rem] mx-auto justify-center rounded-md bg-navPrimary px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                    >
+                      Sign up
+                    </button>
+                  </div>
+                  <p className="mt-2 leading-6 text-center text-gray-500">
+                    Already a member?{" "}
+                    <Link
+                      to={"/login"}
+                      className="font-semibold text-blue-500 hover:text-red-500"
+                    >
+                      Login
+                    </Link>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };
