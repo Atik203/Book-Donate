@@ -2,7 +2,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (AddBookView, AuthorListAPIView, BookViewSet,
+from .views import (AddBookView, AddGenreView, AuthorListAPIView, BookViewSet,
                     ClaimBookAPIView, GenreViewSet, PopularBooksView,
                     UserClaimedBooksView, UserDonatedBooksView)
 
@@ -18,4 +18,5 @@ urlpatterns =[
     path('user-claimed-book/<int:id>/', UserClaimedBooksView.as_view(), name='user-claimed-books'),
     path('user-donated-book/<int:id>/', UserDonatedBooksView.as_view(), name='user-donated-books'),
     path('add-book/',AddBookView.as_view(),name="add-book"),
+    path('add-genre/',AddGenreView.as_view(),name='add-genre')
 ]

@@ -12,9 +12,10 @@ from review.models import Review
 from user.models import BookUser
 
 from .models import Book, Genre
-from .serializers import (AddBookSerializers, AuthorSerializers,
-                          BookSerializers, ClaimedBookSerializers,
-                          GenreSerializers, UserClaimedBookSerializers,
+from .serializers import (AddBookSerializers, AddGenreSerializer,
+                          AuthorSerializers, BookSerializers,
+                          ClaimedBookSerializers, GenreSerializers,
+                          UserClaimedBookSerializers,
                           UserDonatedBookSerializers)
 
 
@@ -131,4 +132,12 @@ class AddBookView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'success': True, 'message': 'Book added successfully'})
-        return Response(serializer.errors, status=400)   
+        return Response(serializer.errors, status=400)
+    
+class AddGenreView(APIView):
+    def post(self, request):
+        serializer = AddGenreSerializer(data=request.data)
+        if serializer.is_valid():
+            genre = serializer.save()
+            return Response({'id': genre.id, 'name': genre.name, 'slug': genre.slug}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)       
