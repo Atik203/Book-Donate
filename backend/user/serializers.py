@@ -65,3 +65,32 @@ class PasswordChangeSerializer(serializers.Serializer):
         if data['new_password'] != data['confirm_password']:
             raise serializers.ValidationError({'error': 'Passwords do not match'})
         return data    
+
+class EditProfileSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(write_only=True)
+    image = serializers.ImageField(required=False)
+    user = UserSerializers(many=False, read_only=True)
+    class Meta:
+        model = BookUser
+        fields = ['id', 'phone', 'address', 'image', 'user']
+
+    def update(self, instance, validated_data):
+        image = validated_data.pop('image', None)
+        if image:
+            instance.image = image
+        
+        user_data = validated_data.get('user')
+        if user_data:
+            instance.user.username = user_data.get('username', instance.user.username)
+            instance.user.first_name = user_data.get('first_name', instance.user.first_name)
+            instance.user.last_name = user_data.get('last_name', instance.user.last_name)
+            instance.user.email = user_data.get('email', instance.user.email)
+            instance.user.save()
+        
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.address = validated_data.get('address', instance.address)
+        instance.save()
+        
+             
+            
+        return super().update(instance, validated_data)

@@ -1,6 +1,7 @@
 
 import logging
 
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
@@ -10,8 +11,9 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -22,8 +24,9 @@ from book.serializers import BookSerializers
 logger = logging.getLogger(__name__)
 
 from .models import BookUser
-from .serializers import (BookUserSerializers, LoginSerializer,
-                          PasswordChangeSerializer, RegistrationSerializer)
+from .serializers import (BookUserSerializers, EditProfileSerializer,
+                          LoginSerializer, PasswordChangeSerializer,
+                          RegistrationSerializer)
 
 
 def send_confirm_email(confirm_link,subject,template_name,email):
@@ -107,7 +110,8 @@ class LoginViewSet(APIView):
                         'last_name': user.last_name,
                         'reward_point': user.bookuser.reward_point,
                         'role' : user.bookuser.role,
-                        'claimed_books': claimed_books_serializer
+                        'claimed_books': claimed_books_serializer,
+                        'address': user.bookuser.address
                     }
                     if hasattr(user, 'bookuser') and user.bookuser is not None:
                         user_data['phone'] = user.bookuser.phone
@@ -151,4 +155,22 @@ class PasswordChangeViewSet(APIView):
         except Exception as e:
             logger.error("Error changing password: %s", str(e))
             return Response({'error': str(e)})    
-        return Response(serializer.errors)               
+        return Response(serializer.errors)        
+
+class EditProfileView(APIView):
+    serializer_class = EditProfileSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    
+    def post(self,request,*args,**kwargs):
+        return self.put(request,*args,**kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        print(request.data)
+        id_str = request.data['id']
+        id = int(id_str)
+        user = BookUser.objects.get(id=id)
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
