@@ -5,6 +5,7 @@ import Books from "../Pages/Books/Books";
 import ContactUs from "../Pages/ContactUs/ContactUs";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import Gifts from "../Pages/Gifts/Gifts";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/SignUp/SignUp";
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
             <BookDetails />
           </PrivateRouteProvider>
         ),
+      },
+      {
+        path: "/gifts",
+        element: <Gifts />,
       },
     ],
   },
