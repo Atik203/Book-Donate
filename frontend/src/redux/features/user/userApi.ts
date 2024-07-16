@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TChangePassword } from "../../../types/userSateData";
 import { baseApi } from "../../api/baseApi";
 

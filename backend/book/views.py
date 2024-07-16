@@ -4,6 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics, serializers, status, viewsets
 from rest_framework.filters import BaseFilterBackend, SearchFilter
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,9 +12,9 @@ from review.models import Review
 from user.models import BookUser
 
 from .models import Book, Genre
-from .serializers import (AuthorSerializers, BookSerializers,
-                          ClaimedBookSerializers, GenreSerializers,
-                          UserClaimedBookSerializers,
+from .serializers import (AddBookSerializers, AuthorSerializers,
+                          BookSerializers, ClaimedBookSerializers,
+                          GenreSerializers, UserClaimedBookSerializers,
                           UserDonatedBookSerializers)
 
 
@@ -121,4 +122,13 @@ class UserDonatedBooksView(generics.ListAPIView):
 
     def get_queryset(self):
         id = self.kwargs['id']
-        return Book.objects.filter(donated_by__id=id)    
+        return Book.objects.filter(donated_by__id=id)
+    
+class AddBookView(APIView):
+    parser_classes = (FormParser, MultiPartParser)
+    def post(self, request):
+        serializer = AddBookSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': True, 'message': 'Book added successfully'})
+        return Response(serializer.errors, status=400)   
