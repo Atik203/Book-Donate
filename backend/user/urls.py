@@ -1,8 +1,9 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (BookUserViewSet, LoginViewSet, LogOutViewSet,
-                    PasswordChangeViewSet, RegistrationViewSet, activate)
+from .views import (BookUserViewSet, EditProfileView, LoginViewSet,
+                    LogOutViewSet, PasswordChangeViewSet, RegistrationViewSet,
+                    activate)
 
 router = DefaultRouter()
 router.register('list', BookUserViewSet) 
@@ -16,4 +17,5 @@ urlpatterns = [
     path('login/', LoginViewSet.as_view(), name = 'login'),
     path('logout/', LogOutViewSet.as_view(), name = 'logout'),
     path('change-password/', PasswordChangeViewSet.as_view(), name = 'change-password'),
+    path('update-profile/', EditProfileView.as_view(), name = 'update-profile'),
 ]

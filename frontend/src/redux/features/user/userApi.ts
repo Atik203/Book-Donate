@@ -51,6 +51,15 @@ const userApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+
+    updateProfile: builder.mutation({
+      query: (data: any) => ({
+        url: "/user/update-profile/",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -61,4 +70,5 @@ export const {
   useGetClaimedBooksQuery,
   useGetDonatedBooksQuery,
   useChangePasswordMutation,
+  useUpdateProfileMutation,
 } = userApi;

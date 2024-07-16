@@ -1,4 +1,5 @@
 import ChangePasswordModal from "../../components/ChangePasswordModal/ChangePasswordModal";
+import EditProfileModal from "../../components/EditProfileModal/EditProfileModal";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 
@@ -26,8 +27,11 @@ const UserDashboard = () => {
           <p className="text-gray-700">@{user.username}</p>
           <p className="mt-2 text-gray-700">{user.email}</p>
           <p className="mt-2 text-gray-700">{user.phone}</p>
-          <div className="mt-4">
+          <div className="mt-4 flex items-center justify-center gap-5">
             <ChangePasswordModal />
+            <div title="Edit">
+              <EditProfileModal />
+            </div>
           </div>
         </div>
       </div>

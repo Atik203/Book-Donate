@@ -2,15 +2,16 @@ import { TBook } from "./book.types";
 
 export interface TUser {
   id: number;
-  email: string | null;
-  first_name: string | null;
-  image: string | null;
-  last_name: string | null;
-  phone: string | null;
-  username: string | null;
+  email: string;
+  first_name: string;
+  image: string;
+  last_name: string;
+  phone: string;
+  username: string;
   reward_point: number;
   role: "Admin" | "User";
   claimed_books: TBook[];
+  address: string;
 }
 
 export interface UserState {

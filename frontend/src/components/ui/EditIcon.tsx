@@ -2,12 +2,13 @@
 export const EditIcon = (props: any) => (
   <svg
     aria-hidden="true"
-    fill="none"
+    fill="white"
     focusable="false"
-    height="1em"
+    height="2.85em"
     role="presentation"
     viewBox="0 0 20 20"
-    width="1em"
+    width="5em"
+    className="bg-red-500 text-white cursor-pointer border-2 border-red-500  p-1 rounded-lg"
     {...props}
   >
     <path
