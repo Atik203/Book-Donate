@@ -1,3 +1,5 @@
+import AddBook from "../Pages/AddBook/AddBook";
+import AddGenre from "../Pages/AddGenre/AddGenre";
 import MyClaimedBook from "../Pages/MyClaimedBook/MyClaimedBook";
 import MyDonatedBook from "../Pages/MyDonatedBook/MyDonatedBook";
 import UserDashboard from "../Pages/UserDashboard/UserDashboard";
@@ -20,6 +22,16 @@ export const userPaths = [
         name: "My Claimed Books",
         path: "my-claimed-book",
         element: <MyClaimedBook />,
+      },
+      {
+        name: "Donate Book",
+        path: "donate-book",
+        element: <AddBook />,
+      },
+      {
+        name: "Add Genre",
+        path: "add-genre",
+        element: <AddGenre />,
       },
     ],
   },
