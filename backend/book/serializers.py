@@ -49,7 +49,6 @@ class ClaimedBookSerializers(serializers.ModelSerializer):
         book.claimed_by = self.validated_data['claimed_by']
         book.status = 'Claimed'
         user = BookUser.objects.get(pk=self.validated_data['claimed_by'].id)
-        user.reward_point += book.reward_point
         user.save()
         book.save()
         return book
