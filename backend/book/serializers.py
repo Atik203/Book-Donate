@@ -170,5 +170,50 @@ class PendingBookSerializers(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = '__all__'
+
+class ApprovedBookSerializers(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = Book
+        fields = ['id']
+
+    def validate(self, data):
+        book_id = data.get('id')
+        if book_id is None:
+            raise serializers.ValidationError('Book id is required')
+        if not Book.objects.filter(pk=book_id).exists():
+            raise serializers.ValidationError('Book does not exist')
+        return data
+
+    def save(self, **kwargs):
+        book = Book.objects.get(pk=self.validated_data['id'])
+        donated_by = book.donated_by
+        book_user = BookUser.objects.get(pk=donated_by.id)  # Ensure we get the ID of the donated_by field
+        book_user.reward_point += book.reward_point
+        book.approve = 'Approved'
+        book_user.save()
+        book.save()
+        return book 
+    
+class DeleteBookSerializers(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = Book
+        fields = ['id']
+
+    def validate(self, data):
+        book_id = data.get('id')
+        if book_id is None:
+            raise serializers.ValidationError('Book id is required')
+        if not Book.objects.filter(pk=book_id).exists():
+            raise serializers.ValidationError('Book does not exist')
+        return data
+
+    def save(self, **kwargs):
+        book = Book.objects.get(pk=self.validated_data['id'])
+        book.delete()
+        return book    
             
                
