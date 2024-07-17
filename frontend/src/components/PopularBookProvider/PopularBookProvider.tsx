@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import { useGetPopularBooksQuery } from "../../redux/features/book/bookApi";
 import { TBook } from "../../types/book.types";
@@ -72,6 +73,13 @@ const PopularBookProvider = () => {
           </Slider>
         </div>
       )}
+      <div className="flex items-center  justify-center mt-8">
+        <Link to="/books">
+          <button className="btn bg-navSecondary text-white hover:text-black">
+            View All
+          </button>
+        </Link>
+      </div>
     </div>
   );
 };
