@@ -16,7 +16,6 @@ class BookUser(models.Model):
     image = models.ImageField(upload_to='users/', default='users/default.jpeg')
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='User')
     reward_point = models.IntegerField(default=0)
-    gifts = models.ManyToManyField(Gift, blank=True,null=True, related_name='book_users', through='BookUserGift')
     
     
     def save(self, *args, **kwargs):
