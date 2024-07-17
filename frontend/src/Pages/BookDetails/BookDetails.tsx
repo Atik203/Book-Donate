@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Select, SelectItem } from "@nextui-org/react";
+import { SelectItem } from "@nextui-org/react";
+import { Select } from "antd";
 import {
   Controller,
   FieldValues,
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { UserReviewProps } from "../../components/UserReview/UserReview";
 import { RATING_OPTIONS } from "../../constants/book.contants";
@@ -24,9 +25,7 @@ import { RootState } from "../../redux/store";
 import { TBook } from "../../types/book.types";
 
 const BookDetails = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const bookId = queryParams.get("id");
+  const bookId = useParams<{ id: string }>().id;
   const { handleSubmit, control, reset } = useForm();
 
   const isAuthenticated = useAppSelector(
@@ -72,7 +71,6 @@ const BookDetails = () => {
   if (isFetching) return <div>Fetching...</div>;
 
   const book = data?.results[0] as TBook;
-
   const reviews = reviewsData?.results ?? [];
 
   const {
@@ -155,7 +153,7 @@ const BookDetails = () => {
     <div className="my-20">
       <div className="flex gap-8 justify-center mx-auto">
         <div className="">
-          <img src={image} alt={title} className="min-w-96" />
+          <img src={image} alt={title} className="min-w-96 max-w-sm" />
         </div>
         <div className="">
           <h1>{title}</h1>
@@ -187,17 +185,17 @@ const BookDetails = () => {
             <strong>ISBN:</strong> {isbn}
           </p>
           <p className="">
-            <strong>Donated By:</strong> {donated_by}
+            <strong>Donated By:</strong> {donated_by?.user.username}
           </p>
           <p>
             <strong>Genre: </strong>
             {genre.map((genre, index) => (
-              <p
+              <span
                 key={index}
                 className="inline-block mr-2 font-semibold cursor-pointer hover:underline hover:text-blue-500 "
               >
                 #{genre.name}
-              </p>
+              </span>
             ))}
           </p>
           <button
@@ -267,8 +265,8 @@ const BookDetails = () => {
                     <Select
                       {...field}
                       placeholder="Select Rating"
-                      label="Select Rating"
                       className="text-xl font-bold text-black bg-base-50"
+                      style={{ display: "block" }} // Temporary inline style for debugging
                     >
                       {RATING_OPTIONS.map((rating) => (
                         <SelectItem key={rating.key} value={rating.key}>

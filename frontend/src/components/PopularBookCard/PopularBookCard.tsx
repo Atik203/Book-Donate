@@ -41,7 +41,7 @@ const PopularBookCard: React.FC<TBookCardProps> = ({ data }) => {
         <p className="text-black text-justify">
           {truncate(data.description, { length: 100 })}
         </p>
-        <Link to={`/book-details/?id=${data.id}`}>
+        <Link to={`/book-details/${data.id}`}>
           <p className="hover:text-navPrimary font-bold text-lg cursor-pointer">
             Learn More <FaArrowRight className="inline" />
           </p>

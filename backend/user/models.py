@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from gift.models import Gift
+
 ROLE_CHOICES = (
     ('User', 'User'),
     ('Admin', 'Admin'),
@@ -14,6 +16,8 @@ class BookUser(models.Model):
     image = models.ImageField(upload_to='users/', default='users/default.jpeg')
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='User')
     reward_point = models.IntegerField(default=0)
+    gifts = models.ManyToManyField(Gift, blank=True,null=True, related_name='book_users', through='BookUserGift')
+    
     
     def save(self, *args, **kwargs):
         if self.user.is_superuser:
@@ -24,3 +28,12 @@ class BookUser(models.Model):
         super(BookUser, self).save(*args, **kwargs)    
     def __str__(self):
         return self.user.username
+    
+class BookUserGift(models.Model):
+    book_user = models.ForeignKey(BookUser, on_delete=models.CASCADE)
+    gift = models.ForeignKey(Gift, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    point_cost = models.IntegerField()
+    
+    def __str__(self):
+        return self.book_user.user.username + ' - ' + self.gift.name    

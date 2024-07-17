@@ -27,7 +27,7 @@ const AddBook = () => {
   const [condition, setCondition] = useState();
   const [AddBook] = useAddBookMutation();
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const reward_point = user?.role === "Admin" ? data.reward_point : 0;
 
@@ -55,6 +55,7 @@ const AddBook = () => {
       if (result.success) {
         toast.success("Book added successfully", { id: toastId });
         refetch();
+        reset();
       } else {
         toast.error("Failed to add book", { id: toastId });
       }
@@ -64,7 +65,7 @@ const AddBook = () => {
   };
 
   return (
-    <div className="min-h-screen mt-10">
+    <div className="min-h-screen">
       <Helmet>
         <title>{user?.role === "Admin" ? "Add" : "Donate"} Book</title>
       </Helmet>
@@ -72,7 +73,7 @@ const AddBook = () => {
         <div className="flex flex-1 flex-col justify-center px-2">
           <div className="mx-auto w-full max-w-4xl">
             <div className="text-center">
-              <h2 className="mt-4 text-3xl font-bold leading-9 tracking-tight text-gray-900">
+              <h2 className="text-3xl font-bold leading-9 tracking-tight text-gray-900">
                 {user?.role === "Admin" ? "Add" : "Donate"} Book
               </h2>
             </div>
