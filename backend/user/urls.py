@@ -2,9 +2,9 @@ from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.routers import DefaultRouter
 
-from .views import (BookUserViewSet, EditProfileView, LoginViewSet,
-                    LogOutViewSet, PasswordChangeViewSet, RegistrationView,
-                    activate)
+from .views import (BookUserViewSet, DeleteUserView, EditProfileView,
+                    LoginViewSet, LogOutViewSet, MakeAdminView,
+                    PasswordChangeViewSet, RegistrationView, activate)
 
 router = DefaultRouter()
 router.register('list', BookUserViewSet) 
@@ -19,4 +19,6 @@ urlpatterns = [
     path('logout/', LogOutViewSet.as_view(), name = 'logout'),
     path('change-password/', PasswordChangeViewSet.as_view(), name = 'change-password'),
     path('update-profile/', EditProfileView.as_view(), name = 'update-profile'),
+    path('delete-user/', DeleteUserView.as_view(), name = 'delete-account'),
+    path('make-admin/', MakeAdminView.as_view(), name = 'make-admin'),
 ]
