@@ -4,6 +4,7 @@ import AddGift from "../Pages/AddGift/AddGift";
 import AllUser from "../Pages/AllUser/AllUser";
 import BookListTable from "../Pages/BookListTable/BookListTable";
 import PendingBook from "../Pages/PendingBook/PendingBook";
+import UpdateBook from "../Pages/UpdateBook/UpdateBook";
 import UserDashboard from "../Pages/UserDashboard/UserDashboard";
 
 export const adminPaths = [
@@ -51,5 +52,10 @@ export const adminPaths = [
         element: <AllUser />,
       },
     ],
+  },
+  {
+    name: "",
+    path: "update-book",
+    element: <UpdateBook />,
   },
 ];

@@ -9,12 +9,12 @@ import Gifts from "../Pages/Gifts/Gifts";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/SignUp/SignUp";
-import UpdateBook from "../Pages/UpdateBook/UpdateBook";
 import Root from "../Root/Root";
 import { routeGenerator } from "../utils/routeGenerator";
 import { adminPaths } from "./admin.routes";
 import PrivateRouteProvider from "./PrivateRouteProvider";
 import { userPaths } from "./user.routes";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -46,9 +46,9 @@ const router = createBrowserRouter([
         element: <AboutUs />,
       },
       {
-        path: `/book-details`,
+        path: `/book-details/:id`,
         element: (
-          <PrivateRouteProvider>
+          <PrivateRouteProvider requiredRoles={["Admin", "User"]}>
             <BookDetails />
           </PrivateRouteProvider>
         ),
@@ -57,20 +57,24 @@ const router = createBrowserRouter([
         path: "/gifts",
         element: <Gifts />,
       },
-      {
-        path: "/update-book",
-        element: <UpdateBook />,
-      },
     ],
   },
   {
     path: "/admin",
-    element: <Dashboard />,
+    element: (
+      <PrivateRouteProvider requiredRoles={["Admin"]}>
+        <Dashboard />
+      </PrivateRouteProvider>
+    ),
     children: routeGenerator(adminPaths),
   },
   {
     path: "/user",
-    element: <Dashboard />,
+    element: (
+      <PrivateRouteProvider requiredRoles={["User"]}>
+        <Dashboard />
+      </PrivateRouteProvider>
+    ),
     children: routeGenerator(userPaths),
   },
 ]);

@@ -2,6 +2,7 @@ import AddBook from "../Pages/AddBook/AddBook";
 import AddGenre from "../Pages/AddGenre/AddGenre";
 import MyClaimedBook from "../Pages/MyClaimedBook/MyClaimedBook";
 import MyDonatedBook from "../Pages/MyDonatedBook/MyDonatedBook";
+import UpdateBook from "../Pages/UpdateBook/UpdateBook";
 import UserDashboard from "../Pages/UserDashboard/UserDashboard";
 
 export const userPaths = [
@@ -34,5 +35,10 @@ export const userPaths = [
         element: <AddGenre />,
       },
     ],
+  },
+  {
+    name: "",
+    path: "update-book",
+    element: <UpdateBook />,
   },
 ];

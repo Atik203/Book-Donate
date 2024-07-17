@@ -69,7 +69,7 @@ const MyClaimedBook = () => {
               </td>
               <td className="text-medium">{book.pages}</td>
               <td>
-                <Link to={`/book-details/?id=${book.id}`}>
+                <Link to={`/book-details/${book.id}`}>
                   <button
                     title="Details"
                     className="hover:text-navPrimary font-bold"
