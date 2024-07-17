@@ -94,3 +94,46 @@ class EditProfileSerializer(serializers.ModelSerializer):
              
             
         return super().update(instance, validated_data)
+    
+
+
+class DeleteUserSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    
+    class Meta:
+        model = BookUser
+        fields = ['id'] 
+    
+    def validate(self, data):
+        id = data['id']
+        if not BookUser.objects.filter(id = id).exists():
+            raise serializers.ValidationError({'error': 'User does not exist'})
+        return data    
+    
+    def delete(self):
+        id = self.validated_data['id']
+        user = BookUser.objects.get(id = id)
+        user.delete()
+        return user
+
+class MakeAdminSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    
+    class Meta:
+        model = BookUser
+        fields = ['id'] 
+    
+    def validate(self, data):
+        id = data['id']
+        if not BookUser.objects.filter(id = id).exists():
+            raise serializers.ValidationError({'error': 'User does not exist'})
+        return data    
+    
+    def make_admin(self):
+        id = self.validated_data['id']
+        user = BookUser.objects.get(id = id)
+        user.role = 'Admin'
+        user.user.is_staff = True
+        user.user.save()
+        user.save()
+        return user        

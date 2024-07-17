@@ -15,7 +15,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
-from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,11 +23,10 @@ from rest_framework.views import APIView
 from book.models import Book
 from book.serializers import BookSerializers
 
-logger = logging.getLogger(__name__)
-
 from .models import BookUser
-from .serializers import (BookUserSerializers, EditProfileSerializer,
-                          LoginSerializer, PasswordChangeSerializer,
+from .serializers import (BookUserSerializers, DeleteUserSerializer,
+                          EditProfileSerializer, LoginSerializer,
+                          MakeAdminSerializer, PasswordChangeSerializer,
                           RegistrationSerializer)
 
 
@@ -151,13 +150,10 @@ class PasswordChangeViewSet(APIView):
                 if user:
                     user.set_password(new_password)
                     user.save()
-                    logger.debug("Password changed successfully for user: %s", request.user.username)
                     return Response({'success': True, 'message': 'Password changed successfully'})
                 else:
-                    logger.debug("Serializer errors: %s", serializer.errors)
                     return Response({'error': 'Invalid credentials'})
         except Exception as e:
-            logger.error("Error changing password: %s", str(e))
             return Response({'error': str(e)})    
         return Response(serializer.errors)        
 
@@ -177,4 +173,24 @@ class EditProfileView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DeleteUserView(APIView):
+    parser_classes = [JSONParser]
+
+    def delete(self, request, *args, **kwargs):
+        serializer = DeleteUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.delete()
+            return Response({'success': True, 'message': 'User deleted successfully'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MakeAdminView(APIView):
+    parser_classes = [JSONParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = MakeAdminSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.make_admin()
+            return Response({'success': True, 'message': 'User promoted to admin successfully'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
