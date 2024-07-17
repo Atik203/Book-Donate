@@ -28,7 +28,7 @@ const giftApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Gift"],
+      invalidatesTags: ["Gift", "User"],
     }),
     getUserGifts: builder.query({
       query: (userId) => `/gift/user/${userId}/`,
