@@ -12,6 +12,8 @@ class GenreSerializers(serializers.ModelSerializer):
         fields = '__all__'
         
 class BookSerializers(serializers.ModelSerializer):
+    donated_by = BookUserSerializers()
+    claimed_by = BookUserSerializers() 
     genre = GenreSerializers(many=True)
     class Meta:
         model = Book
