@@ -13,9 +13,11 @@ from user.models import BookUser
 
 from .models import Book, Genre
 from .serializers import (AddBookSerializers, AddGenreSerializer,
-                          AuthorSerializers, BookSerializers,
-                          ClaimedBookSerializers, GenreSerializers,
-                          PendingBookSerializers, UserClaimedBookSerializers,
+                          ApprovedBookSerializers, AuthorSerializers,
+                          BookSerializers, ClaimedBookSerializers,
+                          DeleteBookSerializers, GenreSerializers,
+                          PendingBookSerializers, UpdateBookSerializers,
+                          UserClaimedBookSerializers,
                           UserDonatedBookSerializers)
 
 
@@ -36,17 +38,18 @@ class BookViewSet(viewsets.ModelViewSet):
     
     # query with id
     def get_queryset(self):
-        queryset = super().get_queryset()
         id = self.request.query_params.get('id', None)
+        if id is not None:
+            queryset = Book.objects.filter(id=id)
+        else:
+            queryset = Book.objects.filter(approve='Approved')
+        
         genre_slug = self.request.query_params.get('genre', None)
         condition = self.request.query_params.get('condition', None)
         status = self.request.query_params.get('status', None)
         rating = self.request.query_params.get('rating', None)
         author = self.request.query_params.get('author', None)
-        if id is not None:
-            queryset = queryset.filter(id=id)
-            if not queryset.exists():
-                return queryset
+
         
         if genre_slug is not None:
             queryset = queryset.filter(genre__slug=genre_slug)
@@ -60,7 +63,6 @@ class BookViewSet(viewsets.ModelViewSet):
         if author is not None:
             author_name = author.replace('+', ' ')
             queryset = queryset.filter(author=author_name)
-        
             
         return queryset
     
@@ -135,13 +137,22 @@ class AddBookView(APIView):
         return Response(serializer.errors, status=400)
 class UpdateBookView(APIView):
     parser_classes = (FormParser, MultiPartParser)
-    def put(self, request, pk):
-        book = Book.objects.get(pk=pk)
-        serializer = AddBookSerializers(book, data=request.data, partial=True)
+    
+    def put(self, request):
+        book_id = int(request.data.get('id'))
+        if not book_id:
+            return Response({'error': 'Book ID is required.'}, status=400)
+        try:
+            book_instance = Book.objects.get(id=book_id)
+        except Book.DoesNotExist:
+            return Response({'error': 'Book not found.'}, status=404)
+        
+        serializer = UpdateBookSerializers(book_instance, data=request.data, context={'request': request}, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response({'success': True, 'message': 'Book updated successfully'})
-        return Response(serializer.errors, status=400)    
+        
+        return Response(serializer.errors, status=400)
     
 class AddGenreView(APIView):
     def post(self, request):
@@ -153,4 +164,28 @@ class AddGenreView(APIView):
 
 class PendingBooksView(viewsets.ModelViewSet):
     serializer_class = PendingBookSerializers
-    queryset = Book.objects.filter(approve='Pending')        
+    queryset = Book.objects.filter(approve='Pending') 
+    
+    
+class ApprovedBookView(APIView):
+    def post(self, request, *args, **kwargs): # Debugging line to print incoming request data
+        serializer = ApprovedBookSerializers(data=request.data,partial=True)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                return Response({'success': True, 'message': 'Book Approved successfully'}, status=status.HTTP_201_CREATED)
+            except serializers.ValidationError as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class DeleteBookView(APIView):
+    def delete(self, request, *args, **kwargs): # Debugging line to print incoming request data
+        serializer = DeleteBookSerializers(data=request.data,partial=True)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                return Response({'success': True, 'message': 'Book Deleted successfully'}, status=status.HTTP_201_CREATED)
+            except serializers.ValidationError as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
+           
