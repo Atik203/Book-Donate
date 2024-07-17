@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import Banner from "../../components/Banner/Banner";
 import BookFilter from "../../components/BookFilter/BookFilter";
 import FAQSection from "../../components/FAQSection/FAQSection";
+import GiftSection from "../../components/GiftSection/GiftSection";
 import PopularBookProvider from "../../components/PopularBookProvider/PopularBookProvider";
 import SubscribeSection from "../../components/SubscribeSection/SubscribeSection";
 import SupportCenter from "../../components/SupportCenter/SupportCenter";
@@ -17,6 +18,7 @@ const Home = () => {
       <Banner></Banner>
       <PopularBookProvider />
       <BookFilter />
+      <GiftSection />
       <UserReviewSection />
       <FAQSection />
       <SupportCenter />
