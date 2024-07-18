@@ -35,8 +35,9 @@ class BuyGiftView(APIView):
     def post(self, request):
         serializer = BuyGiftSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({'success':True}, status=status.HTTP_201_CREATED)
+            result = serializer.save()
+            reward_point = result['reward_point'] 
+            return Response({'success':True,'reward_point': reward_point }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GetSpecificUserGiftView(viewsets.ModelViewSet):
