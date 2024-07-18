@@ -54,7 +54,7 @@ class BuyGiftSerializer(serializers.ModelSerializer):
         book_user.save()
         
         book_user_gift = BookUserGift.objects.create(book_user=book_user, gift=gift, point_cost=point_cost)
-        return book_user_gift
+        return {'reward_point': book_user.reward_point, 'book_user_gift': book_user_gift}
 
 class GetSpecificUserGiftSerializer(serializers.ModelSerializer):
     book_user = BookUserSerializers()

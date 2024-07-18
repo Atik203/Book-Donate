@@ -1,10 +1,15 @@
+import { Tooltip } from "@nextui-org/react";
+import { truncate } from "lodash";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import {
   useBuyGiftMutation,
   useGetAllGiftsQuery,
 } from "../../redux/features/gift/giftApi";
-import { useGetSingleUserQuery } from "../../redux/features/user/userApi";
+import {
+  useGetClaimedBooksQuery,
+  useGetSingleUserQuery,
+} from "../../redux/features/user/userApi";
 import { setUser } from "../../redux/features/user/userSLice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
@@ -20,6 +25,9 @@ export type TGift = {
 
 const GiftSection = () => {
   const user = useAppSelector((state: RootState) => state.user.user);
+  const token = useAppSelector(
+    (state: RootState) => state.user.token
+  ) as string;
   const dispatch = useAppDispatch();
 
   const { data, isFetching, isError, isLoading } =
@@ -31,7 +39,12 @@ const GiftSection = () => {
     refetchOnFocus: true,
   });
 
-  const newUser = userData?.results[0];
+  const { data: claimedBook } = useGetClaimedBooksQuery(user?.id || 0, {
+    skip: !user?.id,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+    refetchOnFocus: true,
+  });
 
   const [BuyGift] = useBuyGiftMutation();
 
@@ -47,8 +60,6 @@ const GiftSection = () => {
     gifts = data.results;
   }
 
-  dispatch(setUser({ token: user?.token, user: newUser }));
-
   const handleBuyGift = async (id: number) => {
     const submitDat = {
       book_user_id: user?.id,
@@ -60,7 +71,24 @@ const GiftSection = () => {
       const response = await BuyGift(submitDat).unwrap();
       if (response.success) {
         toast.success("Gift purchased successfully", { id: toastId });
-        refetch();
+        await refetch();
+
+        const newUser = userData?.results[0];
+        const user_claimed_books = claimedBook?.results;
+        const userSubmitData = {
+          id: newUser?.id,
+          image: newUser?.image,
+          role: newUser?.role,
+          first_name: newUser?.user.first_name,
+          last_name: newUser?.user.last_name,
+          email: newUser?.user.email,
+          claimed_books: user_claimed_books,
+          address: newUser?.address,
+          phone: newUser?.phone,
+          username: newUser?.user.username,
+          reward_point: response?.reward_point,
+        };
+        dispatch(setUser({ token, user: userSubmitData }));
       } else {
         toast.error("Error occurred. Please try again", { id: toastId });
       }
@@ -92,7 +120,17 @@ const GiftSection = () => {
                 </figure>
                 <div className="card-body flex flex-col flex-grow">
                   <h2 className="card-title">{gift.name}</h2>
-                  <p className="flex-grow">{gift.description}</p>
+                  <Tooltip
+                    content={gift.description}
+                    color="foreground"
+                    showArrow={true}
+                    placement="top"
+                    classNames={{
+                      content: ["w-64"],
+                    }}
+                  >
+                    <p>{truncate(gift.description, { length: 30 })}</p>
+                  </Tooltip>
 
                   <div className="flex items-center justify-between mt-4">
                     <div className="badge badge-warning px-2 py-4">

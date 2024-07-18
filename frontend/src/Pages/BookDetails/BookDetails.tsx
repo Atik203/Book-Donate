@@ -256,7 +256,8 @@ const BookDetails = () => {
                   ></textarea>
                 )}
               />
-              <div className="bg-white max-w-md">
+              <div className=" max-w-md">
+                <h1 className="font-semibold my-2">Select a review</h1>
                 <Controller
                   name="rating"
                   control={control}
@@ -265,8 +266,11 @@ const BookDetails = () => {
                     <Select
                       {...field}
                       placeholder="Select Rating"
-                      className="text-xl font-bold text-black bg-base-50"
-                      style={{ display: "block" }} // Temporary inline style for debugging
+                      className="text-xl font-bold text-black hover:shadow-lg"
+                      style={{
+                        display: "block",
+                        height: "40px",
+                      }}
                     >
                       {RATING_OPTIONS.map((rating) => (
                         <SelectItem key={rating.key} value={rating.key}>
