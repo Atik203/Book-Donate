@@ -185,7 +185,7 @@ const BookDetails = () => {
             <strong>ISBN:</strong> {isbn}
           </p>
           <p className="">
-            <strong>Donated By:</strong> {donated_by?.user.username}
+            <strong>Donated By:</strong> {donated_by?.user?.username}
           </p>
           <p>
             <strong>Genre: </strong>

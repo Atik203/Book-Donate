@@ -133,7 +133,7 @@ export default function NavbarComponent() {
                 item === "Home"
                   ? "/"
                   : item === "Dashboard"
-                  ? `/${user?.role.toLowerCase()}/dashboard/`
+                  ? `/${user?.role?.toLowerCase()}/dashboard/`
                   : `/${item.toLowerCase().replace(" ", "-")}`
               }
             >

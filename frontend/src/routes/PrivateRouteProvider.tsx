@@ -25,7 +25,7 @@ const PrivateRouteProvider = ({
     );
   }
 
-  if (requiredRoles && !requiredRoles.includes(user.role)) {
+  if (requiredRoles && !requiredRoles.includes(user?.role ?? "")) {
     return (
       <Navigate
         to="/"

@@ -12,6 +12,7 @@ export interface TUser {
   claimed_books?: TBook[];
   address?: string;
   reward_point: number;
+  user?: TUser;
 }
 
 export interface UserState {

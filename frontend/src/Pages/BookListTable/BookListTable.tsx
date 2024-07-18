@@ -118,7 +118,6 @@ const BookListTable = () => {
                         className="transition-transform"
                         color="secondary"
                         size="md"
-                        // @ts-expect-error - image is not defined
                         src={book?.claimed_by?.image as string}
                       />
                     </div>
@@ -142,7 +141,6 @@ const BookListTable = () => {
                         className="transition-transform"
                         color="secondary"
                         size="md"
-                        // @ts-expect-error - image is not defined
                         src={book?.donated_by?.image as string}
                       />
                     </div>

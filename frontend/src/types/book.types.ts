@@ -1,3 +1,5 @@
+import { TUser } from "./userSateData";
+
 export type TBook = {
   id: number;
   title: string;
@@ -6,8 +8,8 @@ export type TBook = {
   description: string;
   condition: "New" | "Used" | "Refurbished";
   image: string;
-  donated_by: number | null;
-  claimed_by: number | null;
+  donated_by: TUser | null;
+  claimed_by: TUser | null;
   date_added: string;
   status: "Available" | "Claimed" | "Donated";
   isbn: string | null;

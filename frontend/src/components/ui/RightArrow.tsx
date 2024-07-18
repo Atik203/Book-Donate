@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // RightArrow component with corrected onClick prop
-const RightArrow = (props) => {
+const RightArrow = (props: any) => {
   const { onClick } = props;
 
   return (
