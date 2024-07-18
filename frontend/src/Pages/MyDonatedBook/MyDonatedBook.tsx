@@ -97,7 +97,7 @@ const MyDonatedBook = () => {
                 {book.approve}
               </td>
               <td className="text-medium">{book.pages}</td>
-              <td className="">
+              <td className="text-center">
                 {book.approve === "Pending" ? (
                   <div className="mx-auto flex items-center justify-center gap-2">
                     <Link
@@ -122,7 +122,7 @@ const MyDonatedBook = () => {
                   <Link to={`/book-details/${book.id}`}>
                     <button
                       title="Details"
-                      className="hover:text-navPrimary btn bg-green-500 btn-sm text-white"
+                      className="hover:text-navPrimary  btn bg-green-500 btn-sm text-white"
                     >
                       Details
                     </button>
