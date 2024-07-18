@@ -1,4 +1,5 @@
-const LeftArrow = (props) => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const LeftArrow = (props: any) => {
   const { onClick } = props;
   return (
     <svg

@@ -24,7 +24,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, logout, updateUserFromLocalStorage } =
-  userSlice.actions;
+export const { setUser, logout } = userSlice.actions;
 
 export default userSlice.reducer;
