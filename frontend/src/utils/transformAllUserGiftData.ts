@@ -57,47 +57,35 @@ export interface TransformedData {
     role: string;
     reward_point: number;
   };
-  gifts: TransformedGift[];
+  gift: TransformedGift;
 }
 
 function transformAllUserGiftData(purchases: Purchase[]): TransformedData[] {
   const result: TransformedData[] = [];
 
-  const userMap = new Map<number, TransformedData>();
-
   purchases.forEach((purchase) => {
     const bookUser = purchase.book_user;
     const gift = purchase.gift;
 
-    if (userMap.has(bookUser.id)) {
-      const existingUser = userMap.get(bookUser.id);
-      const existingGift = existingUser!.gifts.find((g) => g.id === gift.id);
+    const existingEntry = result.find(
+      (entry) => entry.book_user.id === bookUser.id && entry.gift.id === gift.id
+    );
 
-      if (existingGift) {
-        existingGift.quantity += 1;
-        existingGift.total_cost += purchase.point_cost;
-      } else {
-        existingUser!.gifts.push({
+    if (existingEntry) {
+      existingEntry.gift.quantity += 1;
+      existingEntry.gift.total_cost += purchase.point_cost;
+    } else {
+      result.push({
+        book_user: bookUser,
+        gift: {
           ...gift,
           quantity: 1,
           total_cost: purchase.point_cost,
-        });
-      }
-    } else {
-      userMap.set(bookUser.id, {
-        book_user: bookUser,
-        gifts: [
-          {
-            ...gift,
-            quantity: 1,
-            total_cost: purchase.point_cost,
-          },
-        ],
+        },
       });
     }
   });
 
-  userMap.forEach((value) => result.push(value));
   return result;
 }
 

@@ -64,8 +64,8 @@ export const adminPaths = [
         element: <AddGift />,
       },
       {
-        name: "User Purchase History",
-        path: "user-purchase-history",
+        name: "Purchase History",
+        path: "purchase-history",
         element: <AllUserGiftList />,
       },
     ],
