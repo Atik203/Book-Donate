@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import status, viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -56,4 +57,5 @@ class GetSpecificUserGiftView(viewsets.ModelViewSet):
 class GiftViewSet(viewsets.ModelViewSet):
     queryset = Gift.objects.all()
     serializer_class = GiftSerializer
+    
    

@@ -31,7 +31,11 @@ const giftApi = baseApi.injectEndpoints({
       invalidatesTags: ["Gift", "User"],
     }),
     getUserGifts: builder.query({
-      query: (userId) => `/gift/user/${userId}/`,
+      query: (userId) => `/gift/user-gift/?id=${userId}`,
+      providesTags: ["Gift"],
+    }),
+    allUserGifts: builder.query({
+      query: () => "/gift/user-gift/",
       providesTags: ["Gift"],
     }),
   }),
@@ -43,4 +47,5 @@ export const {
   useDeleteGiftMutation,
   useBuyGiftMutation,
   useGetUserGiftsQuery,
+  useAllUserGiftsQuery,
 } = giftApi;
