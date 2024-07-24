@@ -6,7 +6,7 @@ const giftApi = baseApi.injectEndpoints({
       query: () => "/gift/list/",
       providesTags: ["Gift"],
     }),
-    createGift: builder.mutation({
+    addGift: builder.mutation({
       query: (gift) => ({
         url: "/gift/add/",
         method: "POST",
@@ -43,7 +43,7 @@ const giftApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllGiftsQuery,
-  useCreateGiftMutation,
+  useAddGiftMutation,
   useDeleteGiftMutation,
   useBuyGiftMutation,
   useGetUserGiftsQuery,

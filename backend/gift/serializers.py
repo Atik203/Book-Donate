@@ -14,10 +14,16 @@ class GiftSerializer(serializers.ModelSerializer):
 class AddGiftSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gift
-        fields = '__all__'
+        fields = ['name','description','point_cost','image','stock']
         
     def create(self, validated_data):
-        gift = Gift.objects.create(**validated_data)
+        name = self.validated_data['name']
+        description = self.validated_data['description']
+        stock = int(self.validated_data['stock'])
+        point_cost = int(self.validated_data['point_cost'])
+        image = self.validated_data['image']
+        gift = Gift.objects.create(name=name,description=description,stock=stock,image=image,point_cost=point_cost)
+        
         return gift
 
 class DeleteGiftSerializer(serializers.ModelSerializer):

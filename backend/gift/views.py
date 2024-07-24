@@ -21,7 +21,7 @@ class AddGiftView(APIView):
         serializer = AddGiftSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({'success':True}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteGiftView(APIView):
@@ -29,7 +29,7 @@ class DeleteGiftView(APIView):
         serializer = DeleteGiftSerializer(data=request.data)
         if serializer.is_valid():
             serializer.delete(serializer.validated_data)
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response({'success':True}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class BuyGiftView(APIView):
