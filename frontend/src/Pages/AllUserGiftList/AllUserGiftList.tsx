@@ -19,8 +19,6 @@ const AllUserGiftList = () => {
   const allUserGiftData: TransformedData[] =
     transformAllUserGiftData(purchases);
 
-  console.log(allUserGiftData);
-
   return (
     <div className="overflow-x-auto">
       <table className="table text-black">
@@ -36,8 +34,8 @@ const AllUserGiftList = () => {
           </tr>
         </thead>
         <tbody>
-          {allUserGiftData.map((item: any) => (
-            <tr key={item.book_user.id} className="text-black">
+          {allUserGiftData.map((item: any, index) => (
+            <tr key={index} className="text-black">
               <td>
                 <div className="flex items-center gap-3">
                   <div className="avatar">

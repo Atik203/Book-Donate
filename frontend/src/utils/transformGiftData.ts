@@ -1,3 +1,5 @@
+import { TGift } from "../types";
+
 interface User {
   id: number;
   username: string;
@@ -11,15 +13,6 @@ interface User {
   reward_point: number;
 }
 
-interface Gift {
-  id: number;
-  name: string;
-  description: string;
-  image: string;
-  point_cost: number;
-  stock: number;
-}
-
 export interface Purchase {
   id: number;
   book_user: {
@@ -31,7 +24,7 @@ export interface Purchase {
     role: string;
     reward_point: number;
   };
-  gift: Gift;
+  gift: TGift;
   date: string;
   point_cost: number;
 }

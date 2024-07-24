@@ -8,7 +8,7 @@ import {
   useGetAllUserQuery,
   useMakeAdminMutation,
 } from "../../redux/features/user/userApi";
-import { TBook } from "../../types";
+import { TUser } from "../../types/userSateData";
 
 const AllUser = () => {
   const [DeleteUser] = useDeleteUserMutation();
@@ -71,7 +71,7 @@ const AllUser = () => {
           </tr>
         </thead>
         <tbody>
-          {allUsers.map((item: TBook) => (
+          {allUsers.map((item: TUser) => (
             <tr key={item.id} className="text-black">
               <td>
                 <div className="flex items-center gap-3">
