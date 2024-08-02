@@ -1,12 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import AboutUs from "../Pages/AboutUs/AboutUs";
+import BookDetails from "../Pages/BookDetails/BookDetails";
+import Books from "../Pages/Books/Books";
 import ContactUs from "../Pages/ContactUs/ContactUs";
+import Dashboard from "../Pages/Dashboard/Dashboard";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import Gifts from "../Pages/Gifts/Gifts";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
-import Service from "../Pages/Service/Service";
 import SignUp from "../Pages/SignUp/SignUp";
 import Root from "../Root/Root";
+import { routeGenerator } from "../utils/routeGenerator";
+import { adminPaths } from "./admin.routes";
+import PrivateRouteProvider from "./PrivateRouteProvider";
+import { userPaths } from "./user.routes";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,7 +27,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/books",
-        element: <Service />,
+        element: <Books />,
       },
       {
         path: "/contact-us",
@@ -37,7 +45,37 @@ const router = createBrowserRouter([
         path: "/about-us",
         element: <AboutUs />,
       },
+      {
+        path: `/book-details/:id`,
+        element: (
+          <PrivateRouteProvider requiredRoles={["Admin", "User"]}>
+            <BookDetails />
+          </PrivateRouteProvider>
+        ),
+      },
+      {
+        path: "/gifts",
+        element: <Gifts />,
+      },
     ],
+  },
+  {
+    path: "/admin",
+    element: (
+      <PrivateRouteProvider requiredRoles={["Admin"]}>
+        <Dashboard />
+      </PrivateRouteProvider>
+    ),
+    children: routeGenerator(adminPaths),
+  },
+  {
+    path: "/user",
+    element: (
+      <PrivateRouteProvider requiredRoles={["User"]}>
+        <Dashboard />
+      </PrivateRouteProvider>
+    ),
+    children: routeGenerator(userPaths),
   },
 ]);
 

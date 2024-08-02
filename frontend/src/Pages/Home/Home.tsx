@@ -1,8 +1,12 @@
 import { Helmet } from "react-helmet-async";
 import Banner from "../../components/Banner/Banner";
-import Doctors from "../../components/Doctors/Doctors";
-import ServiceProvide from "../../components/ServiceProvide/ServiceProvide";
-import TitleDescriptionBlock from "../../components/TitleDescriptionBlock/TitleDescriptionBlock";
+import BookFilter from "../../components/BookFilter/BookFilter";
+import FAQSection from "../../components/FAQSection/FAQSection";
+import GiftSection from "../../components/GiftSection/GiftSection";
+import PopularBookProvider from "../../components/PopularBookProvider/PopularBookProvider";
+import SubscribeSection from "../../components/SubscribeSection/SubscribeSection";
+import SupportCenter from "../../components/SupportCenter/SupportCenter";
+import UserReviewSection from "../../components/UserReviewSection/UserReviewSection";
 
 const Home = () => {
   return (
@@ -12,22 +16,13 @@ const Home = () => {
         <meta name="description" content="Home Page" />
       </Helmet>
       <Banner></Banner>
-      <ServiceProvide />
-      <Doctors />
-      <TitleDescriptionBlock
-        title="Clients Review about us"
-        description="We provide the best popular available books. Check out our client review below."
-      />
-
-      <TitleDescriptionBlock
-        title="Frequently Asked Questions"
-        description="Check out our FAQ below. If you have any questions, feel free to contact us."
-      />
-
-      <TitleDescriptionBlock
-        title="Subscribe to our newsletter"
-        description="Subscribe to our newsletter below. We will send you the latest updates."
-      />
+      <PopularBookProvider />
+      <BookFilter />
+      <GiftSection />
+      <UserReviewSection />
+      <FAQSection />
+      <SupportCenter />
+      <SubscribeSection />
     </div>
   );
 };

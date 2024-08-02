@@ -1,4 +1,7 @@
 
+import logging
+
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
@@ -6,15 +9,24 @@ from django.core.mail import EmailMessage
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from rest_framework import viewsets
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from book.models import Book
+from book.serializers import BookSerializers
+
 from .models import BookUser
-from .serializers import (BookUserSerializers, LoginSerializer,
+from .serializers import (BookUserSerializers, DeleteUserSerializer,
+                          EditProfileSerializer, LoginSerializer,
+                          MakeAdminSerializer, PasswordChangeSerializer,
                           RegistrationSerializer)
 
 
@@ -35,9 +47,20 @@ class BookUserViewSet(viewsets.ModelViewSet):
     queryset =  BookUser.objects.all()
     serializer_class = BookUserSerializers
     
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        id = self.request.query_params.get('id', None)
+        if id is not None:
+            queryset = queryset.filter(id=id)
+            if not queryset.exists():
+                return queryset
+        return queryset
+    
 
-class RegistrationViewSet(APIView):
+
+class RegistrationView(APIView):
     serializer_class = RegistrationSerializer
+   
     def post(self, request):
         try:
             serializer = self.serializer_class(data = request.data)
@@ -79,12 +102,19 @@ class LoginViewSet(APIView):
                 if user:
                     token,_ = Token.objects.get_or_create(user = user)
                     login(request, user)
+                    claimed_books = Book.objects.filter(claimed_by=user.bookuser.id)
+                    claimed_books_serializer = BookSerializers(claimed_books, many=True).data
                     user_data = {
+                        # BokkUser model id not user model id
+                        'id': user.bookuser.id,
                         'username': user.username, 
                         'email': user.email, 
                         'first_name': user.first_name, 
                         'last_name': user.last_name,
                         'reward_point': user.bookuser.reward_point,
+                        'role' : user.bookuser.role,
+                        'claimed_books': claimed_books_serializer,
+                        'address': user.bookuser.address
                     }
                     if hasattr(user, 'bookuser') and user.bookuser is not None:
                         user_data['phone'] = user.bookuser.phone
@@ -105,4 +135,62 @@ class LogOutViewSet(APIView):
                 logout(request)
         except:
             return Response("Error Something")        
-        return Response("Logged out successfully")       
+        return Response("Logged out successfully")
+
+class PasswordChangeViewSet(APIView):
+    serializer_class = PasswordChangeSerializer
+    def post(self, request):
+        try:
+            serializer = self.serializer_class(data = request.data)
+            if serializer.is_valid():
+                username = serializer.validated_data['username']
+                old_password = serializer.validated_data['old_password']
+                new_password = serializer.validated_data['new_password']
+                user = authenticate(username = username, password = old_password)
+                if user:
+                    user.set_password(new_password)
+                    user.save()
+                    return Response({'success': True, 'message': 'Password changed successfully'})
+                else:
+                    return Response({'error': 'Invalid credentials'})
+        except Exception as e:
+            return Response({'error': str(e)})    
+        return Response(serializer.errors)        
+
+class EditProfileView(APIView):
+    serializer_class = EditProfileSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    
+    def post(self,request,*args,**kwargs):
+        return self.put(request,*args,**kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        print(request.data)
+        id_str = request.data['id']
+        id = int(id_str)
+        user = BookUser.objects.get(id=id)
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DeleteUserView(APIView):
+    parser_classes = [JSONParser]
+
+    def delete(self, request, *args, **kwargs):
+        serializer = DeleteUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.delete()
+            return Response({'success': True, 'message': 'User deleted successfully'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MakeAdminView(APIView):
+    parser_classes = [JSONParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = MakeAdminSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.make_admin()
+            return Response({'success': True, 'message': 'User promoted to admin successfully'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -12,6 +12,12 @@ STATUS_CHOICES = [
     ('Claimed', 'Claimed'),
     ('Donated', 'Donated'),
 ]
+
+APPROVE_CHOICES=[
+    ('Pending','Pending'),
+    ('Approved','Approved'),
+]
+
 # Create your models here.
 class Genre(models.Model):
     name = models.CharField(max_length=100)
@@ -36,6 +42,8 @@ class Book(models.Model):
     stock = models.IntegerField(default=0)
     pages = models.IntegerField(blank=True, null=True)
     reward_point = models.IntegerField(default=0)
+    approve = models.CharField(max_length=20,choices=APPROVE_CHOICES,null=True,blank=True,default='Pending')
+    
     
     def __str__(self):
         return self.title    

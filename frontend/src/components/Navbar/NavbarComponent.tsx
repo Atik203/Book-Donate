@@ -13,16 +13,18 @@ import {
   NavbarMenuToggle,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import axiosPublic from "../../axios/axiosPublic";
+import { toast } from "sonner";
+import { useLogoutMutation } from "../../redux/features/user/userApi";
 import { logout } from "../../redux/features/user/userSLice";
+import { useAppDispatch } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { TUser } from "../../types/userSateData";
 
 export default function NavbarComponent() {
   const userState = useSelector((state: RootState) => state.user);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const user: TUser | null = userState.user;
   let username, first_name, last_name, image, email, reward_point;
@@ -31,11 +33,17 @@ export default function NavbarComponent() {
     ({ username, first_name, last_name, image, email, reward_point } = user);
   }
 
-  const handleLogout = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    axiosPublic.get("/user/logout/").then((res) => {
+  const [Logout] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    const toastId = toast.loading("Logging out...");
+    try {
+      await Logout({});
       dispatch(logout());
-    });
+      toast.success("Logged out successfully", { id: toastId });
+    } catch (error) {
+      toast.error("Logout failed", { id: toastId });
+    }
   };
 
   const location = useLocation();
@@ -54,15 +62,8 @@ export default function NavbarComponent() {
   }, []);
 
   const menuItems = user
-    ? [
-        "Home",
-        "Books",
-        "Contact Us",
-        "My Profile",
-        "My Appointments",
-        "Log Out",
-      ]
-    : ["Home", "Books", "Contact Us"];
+    ? ["Home", "Books", "Gifts", "Contact Us", "Dashboard", "Log Out"]
+    : ["Home", "Books", "Gifts", "Contact Us"];
 
   return isMobile ? (
     <Navbar
@@ -131,6 +132,8 @@ export default function NavbarComponent() {
               to={
                 item === "Home"
                   ? "/"
+                  : item === "Dashboard"
+                  ? `/${user?.role?.toLowerCase()}/dashboard/`
                   : `/${item.toLowerCase().replace(" ", "-")}`
               }
             >
@@ -191,6 +194,16 @@ export default function NavbarComponent() {
             Books
           </RouterLink>
         </NavbarItem>
+        <NavbarItem isActive={location.pathname === "/gifts"}>
+          <RouterLink
+            to={"/gifts"}
+            className={
+              location.pathname === "/gits" ? "text-navPrimary" : "text-black"
+            }
+          >
+            Gifts
+          </RouterLink>
+        </NavbarItem>
         <NavbarItem isActive={location.pathname === "/contact-us"}>
           <RouterLink
             to={"/contact-us"}
@@ -242,16 +255,25 @@ export default function NavbarComponent() {
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-bold text-navPrimary">{username}</p>
-                <p className="font-semibold">
+                <p className="font-bold text-navPrimary italic">{username}</p>
+                <p className="font-medium">
                   {first_name} {last_name}
                 </p>
-                <p className="font-semibold">{email}</p>
+                <p className="font-medium">{email}</p>
               </DropdownItem>
-              <DropdownItem key="settings">My Profile</DropdownItem>
-              <DropdownItem key="team_settings">My Appointments</DropdownItem>
+              <DropdownItem key="settings">
+                {" "}
+                <RouterLink
+                  className="font-bold "
+                  to={`/${user.role}/dashboard/`}
+                >
+                  Dashboard
+                </RouterLink>
+              </DropdownItem>
               <DropdownItem key="logout" color="danger">
-                <button onClick={handleLogout}>Logout</button>
+                <button className="font-bold " onClick={handleLogout}>
+                  Logout
+                </button>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

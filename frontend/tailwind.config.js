@@ -16,6 +16,6 @@ export default {
     },
   },
   darkMode: "class",
-  plugins: [nextui(),require("daisyui")],
+  plugins: [nextui(),require("daisyui"),require("@tailwindcss/forms")],
 }
 

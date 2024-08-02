@@ -1,11 +1,18 @@
+import { TBook } from "./book.types";
+
 export interface TUser {
-  email: string | null;
-  first_name: string | null;
-  image: string | null;
-  last_name: string | null;
-  phone: string | null;
-  username: string | null;
+  id: number;
+  email?: string;
+  first_name?: string;
+  image?: string;
+  last_name?: string;
+  phone?: string;
+  username?: string;
+  role?: "User" | "Admin";
+  claimed_books?: TBook[];
+  address?: string;
   reward_point: number;
+  user?: TUser;
 }
 
 export interface UserState {
@@ -13,3 +20,10 @@ export interface UserState {
   user: TUser | null;
   isAuthenticated: boolean;
 }
+
+export type TChangePassword = {
+  username: string;
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
+};
