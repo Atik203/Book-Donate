@@ -78,7 +78,11 @@ export default function NavbarComponent() {
         />
         <NavbarBrand>
           <RouterLink to="/" className="flex items-center">
-            <img src="./public/logo.png" alt="" className="h-12 w-12" />
+            <img
+              src="https://i.ibb.co/SfJ74Bj/logo.png"
+              alt=""
+              className="h-12 w-12"
+            />
             <p className="font-bold md:text-3xl text-2xl lg:text-4xl">
               Book<span className="text-navPrimary">Donate</span>
             </p>

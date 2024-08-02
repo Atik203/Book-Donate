@@ -44,7 +44,11 @@ const Sidebar = () => {
         }}
       >
         <Link to={"/"} className="flex items-center gap-1">
-          <img src="./public/logo.png" alt="" className="h-8 w-8" />
+          <img
+            src="https://i.ibb.co/SfJ74Bj/logo.png"
+            alt=""
+            className="h-8 w-8"
+          />
           <p className="font-bold tracking-wider md:text-xl text-lg lg:text-2xl">
             Book<span className="text-navPrimary">Donate</span>
           </p>
