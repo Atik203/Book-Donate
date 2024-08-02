@@ -30,7 +30,7 @@ class BookPagination(PageNumberPagination):
 
 
 class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.filter(approve='Approved')
+    queryset = Book.objects.filter(approve='Approved').order_by('id')
     pagination_class = BookPagination
     serializer_class = BookSerializers
     filter_backends = [SearchFilter]
@@ -40,9 +40,9 @@ class BookViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         id = self.request.query_params.get('id', None)
         if id is not None:
-            queryset = Book.objects.filter(id=id)
+            queryset = Book.objects.filter(id=id).order_by('id')
         else:
-            queryset = Book.objects.filter(approve='Approved')
+            queryset = Book.objects.filter(approve='Approved').order_by('id')
         
         genre_slug = self.request.query_params.get('genre', None)
         condition = self.request.query_params.get('condition', None)
