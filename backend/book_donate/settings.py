@@ -39,7 +39,8 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:5173','https://book-donate.vercel.app'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     'https://book-donate.vercel.app',
-    'https://book-donate-yo6k.onrender.com'
+    'https://book-donate-yo6k.onrender.com',
+    # 'localhost:8000',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
