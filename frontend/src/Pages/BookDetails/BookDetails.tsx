@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SelectItem } from "@nextui-org/react";
 import { Select } from "antd";
+import moment from "moment";
 import {
   Controller,
   FieldValues,
@@ -179,7 +180,8 @@ const BookDetails = () => {
             <strong>Stock:</strong> {stock}
           </p>
           <p>
-            <strong>Date Added:</strong> {date_added}
+            <strong>Date Added:</strong>{" "}
+            {moment(date_added).format("YYYY-MM-DD")}
           </p>
           <p>
             <strong>ISBN:</strong> {isbn}
