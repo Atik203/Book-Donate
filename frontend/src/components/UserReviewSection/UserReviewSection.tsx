@@ -1,6 +1,5 @@
 import Marquee from "react-fast-marquee";
 
-import { toast } from "sonner";
 import { useGetAllReviewsQuery } from "../../redux/features/review/reviewApi";
 import TitleDescriptionBlock from "../TitleDescriptionBlock/TitleDescriptionBlock";
 import UserReview, { UserReviewProps } from "./../UserReview/UserReview";
@@ -12,18 +11,13 @@ const UserReviewSection = () => {
   );
   const reviews = data?.results;
 
-  if (isFetching) {
+  if (isFetching || isLoading) {
     return <div className="mx-auto text-lg font-medium">Loading...</div>;
   }
   if (isError) {
-    toast.error("Failed to fetch reviews");
     return (
       <div className="mx-auto text-lg font-medium">Failed to fetch reviews</div>
     );
-  }
-
-  if (isLoading) {
-    return <div className="mx-auto text-lg font-medium">Loading...</div>;
   }
 
   return (
