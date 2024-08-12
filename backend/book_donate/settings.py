@@ -34,11 +34,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*'] # all hosts
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173','https://book-donate.vercel.app']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173','https://book-donate.vercel.app','https://book-donate-yo6k.onrender.com']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     'https://book-donate.vercel.app',
+    'https://book-donate-yo6k.onrender.com'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
