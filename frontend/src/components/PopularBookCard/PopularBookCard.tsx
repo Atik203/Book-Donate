@@ -16,7 +16,7 @@ const PopularBookCard: React.FC<TBookCardProps> = ({ data }) => {
         width={300}
         height={350}
         alt="Card background"
-        className="rounded-lg mx-auto p-0 m-0 h-[350px] w-64 md:w-72"
+        className="rounded-lg mx-auto p-0 m-0 h-[320px] w-64 md:w-72 object-contain"
         src={`https://app.requestly.io/delay/2000/${data.image}`}
       />
       <div className="px-6 py-3 flex-col items-start">
