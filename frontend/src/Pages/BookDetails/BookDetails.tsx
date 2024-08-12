@@ -154,10 +154,14 @@ const BookDetails = () => {
     <div className="my-20">
       <div className="flex gap-8 justify-center mx-auto">
         <div className="">
-          <img src={image} alt={title} className="min-w-96 max-w-sm" />
+          <img
+            src={image}
+            alt={title}
+            className="min-w-80 max-w-sm object-contain"
+          />
         </div>
         <div className="">
-          <h1>{title}</h1>
+          <h1 className="font-bold text-2xl">{title}</h1>
           <p>
             <strong>Author:</strong> {author}
           </p>
@@ -210,6 +214,7 @@ const BookDetails = () => {
           </button>
         </div>
       </div>
+
       <div className="mt-8">
         <h2 className="text-xl font-semibold">Reviews</h2>
         {reviews?.length ? (
