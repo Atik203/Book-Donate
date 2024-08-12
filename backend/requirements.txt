@@ -2,6 +2,7 @@ asgiref
 click
 colorama
 cssbeautifier
+dj-database-url
 Django
 django-cors-headers
 django-environ
@@ -16,10 +17,12 @@ json5
 Markdown
 pathspec
 pillow
+psycopg2
 PyYAML
 regex
 setuptools
 six
 sqlparse
 tqdm
+typing_extensions
 tzdata
