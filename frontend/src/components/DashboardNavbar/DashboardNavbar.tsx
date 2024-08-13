@@ -177,6 +177,16 @@ export default function DashboardNavbar() {
             Books
           </RouterLink>
         </NavbarItem>
+        <NavbarItem isActive={location.pathname === "/gifts"}>
+          <RouterLink
+            to={"/gifts"}
+            className={
+              location.pathname === "/books" ? "text-navPrimary" : "text-black"
+            }
+          >
+            Gifts
+          </RouterLink>
+        </NavbarItem>
         <NavbarItem isActive={location.pathname === "/contact-us"}>
           <RouterLink
             to={"/contact-us"}
