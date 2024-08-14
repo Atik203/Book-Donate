@@ -18,6 +18,7 @@ import { useGetDonatedBooksQuery } from "../../redux/features/user/userApi";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { genreKeyLabelGenerator } from "../../utils/genreKeyLabelGenerator";
+import uploadImageToImgBB from "../../utils/uploadImageToImgBB";
 
 const UpdateBook = () => {
   const location = useLocation();
@@ -114,7 +115,7 @@ const UpdateBook = () => {
         donated_by: donated_by.toString(),
         genre: Array.from(values).join(","),
         condition: Array.from(condition)[0],
-        id: book.id.toString(),
+        id: book.id,
       };
 
       // Send the JSON data
