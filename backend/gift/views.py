@@ -1,7 +1,5 @@
 from django.shortcuts import render
 from rest_framework import status, viewsets
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -15,8 +13,6 @@ from .serializers import (AddGiftSerializer, BuyGiftSerializer,
 
 
 class AddGiftView(APIView):
-    parser_classes = (FormParser, MultiPartParser)
-
     def post(self, request):
         serializer = AddGiftSerializer(data=request.data)
         if serializer.is_valid():

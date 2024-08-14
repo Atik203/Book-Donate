@@ -13,7 +13,7 @@ class BookUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=11)
     address = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='users/', default='users/default.jpeg')
+    image = models.CharField(max_length=200, blank=True, null=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='User')
     reward_point = models.IntegerField(default=0)
     
