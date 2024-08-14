@@ -68,7 +68,7 @@ class PasswordChangeSerializer(serializers.Serializer):
 
 class EditProfileSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(write_only=True)
-    image = serializers.ImageField(required=False)
+    image = serializers.CharField(required=False)
     user = UserSerializers(many=False, read_only=True)
     class Meta:
         model = BookUser
@@ -90,9 +90,6 @@ class EditProfileSerializer(serializers.ModelSerializer):
         instance.phone = validated_data.get('phone', instance.phone)
         instance.address = validated_data.get('address', instance.address)
         instance.save()
-        
-             
-            
         return super().update(instance, validated_data)
     
 

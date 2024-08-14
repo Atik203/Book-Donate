@@ -14,6 +14,7 @@ import { setUser } from "../../redux/features/user/userSLice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { TUser } from "../../types/userSateData";
+import uploadImageToImgBB from "../../utils/uploadImageToImgBB";
 import { EditIcon } from "../ui/EditIcon";
 
 export default function EditProfileModal() {
@@ -34,52 +35,52 @@ export default function EditProfileModal() {
       image: currentUser?.image || "",
     },
   });
-
+  console.log(currentUser);
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const formData = new FormData();
-    formData.append("id", currentUser?.id.toString() as string);
-    formData.append("phone", data.phone);
-    formData.append("address", data.address);
+    let imageUrl = currentUser?.image;
+
     // Check if the image field has a file selected
     if (data.image && data.image.length > 0) {
-      formData.append("image", data.image[0]);
+      imageUrl = await uploadImageToImgBB(data.image[0]);
     }
-    formData.append(
-      "user",
-      JSON.stringify({
+
+    const userData = {
+      id: currentUser?.id,
+      phone: data.phone,
+      address: data.address,
+      user: {
         email: data.email,
         first_name: data.firstName,
         last_name: data.lastName,
         username: data.username,
-      })
-    );
+        image: imageUrl,
+      },
+    };
 
     try {
-      await updateProfile(formData).unwrap();
-      toast.success("Profile updated successfully");
+      const result = await updateProfile(userData).unwrap();
+      if (result.success) {
+        toast.success("Profile updated successfully");
+        const setUserData: TUser = {
+          username: data.username,
+          email: data.email,
+          first_name: data.firstName,
+          last_name: data.lastName,
+          phone: data.phone,
+          address: data.address,
+          image: imageUrl,
+          role: currentUser?.role as "User" | "Admin",
+          id: currentUser?.id as number,
+          reward_point: currentUser?.reward_point as number,
+          claimed_books: currentUser?.claimed_books as TUser["claimed_books"],
+        };
 
-      const setUserData: TUser = {
-        username: data.username,
-        email: data.email,
-        first_name: data.firstName,
-        last_name: data.lastName,
-        phone: data.phone,
-        address: data.address,
-        image: data.image,
-        role: currentUser?.role as "User" | "Admin",
-        id: currentUser?.id as number,
-        reward_point: currentUser?.reward_point as number,
-        claimed_books: currentUser?.claimed_books as TUser["claimed_books"],
-      };
-
-      if (data.image) {
-        setUserData.image = URL.createObjectURL(data.image[0]);
+        if (!token) return toast.error("Token not found");
+        dispatch(setUser({ user: setUserData, token }));
+        onOpenChange();
+      } else {
+        toast.error("Failed to update profile");
       }
-
-      if (!token) return toast.error("Token not found");
-
-      dispatch(setUser({ user: setUserData, token }));
-      onOpenChange();
     } catch (error) {
       toast.error("Failed to update profile");
     }
