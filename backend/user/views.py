@@ -1,7 +1,4 @@
 
-import logging
-
-from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
@@ -9,14 +6,12 @@ from django.core.mail import EmailMessage
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
-from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import NotFound
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -119,7 +114,7 @@ class LoginViewSet(APIView):
                     }
                     if hasattr(user, 'bookuser') and user.bookuser is not None:
                         user_data['phone'] = user.bookuser.phone
-                        user_data['image'] = request.build_absolute_uri(user.bookuser.image.url)
+                        user_data['image'] = user.bookuser.image
                     return Response({'token': token.key, 'user': user_data })
                 else:
                     return Response({'error': 'Invalid credentials'})
@@ -159,22 +154,29 @@ class PasswordChangeViewSet(APIView):
             return Response({'error': str(e)})    
         return Response(serializer.errors)        
 
+
+
+
 class EditProfileView(APIView):
     serializer_class = EditProfileSerializer
-    parser_classes = (MultiPartParser, FormParser)
     
-    def post(self,request,*args,**kwargs):
-        return self.put(request,*args,**kwargs)
+    def post(self, request, *args, **kwargs):
+        return self.put(request, *args, **kwargs)
     
     def put(self, request, *args, **kwargs):
-        print(request.data)
-        id_str = request.data['id']
-        id = int(id_str)
-        user = BookUser.objects.get(id=id)
+        id = request.data.get('id')
+        if not id:
+            return Response({'error': 'ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = BookUser.objects.get(id=id)
+        except BookUser.DoesNotExist:
+            raise NotFound('BookUser matching query does not exist.')
+        
         serializer = self.serializer_class(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({'success': True, 'message': 'Profile Updated Successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteUserView(APIView):
