@@ -42,6 +42,7 @@ export default function EditProfileModal() {
     // Check if the image field has a file selected
     if (data.image && data.image.length > 0) {
       imageUrl = await uploadImageToImgBB(data.image[0]);
+      if (!imageUrl) return toast.error("Failed to upload image");
     }
 
     const userData = {

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { Avatar } from "@nextui-org/react";
-import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import {
   useDeleteUserMutation,
@@ -17,9 +16,8 @@ const AllUser = () => {
   const { data, isError, isFetching, isLoading, refetch } =
     useGetAllUserQuery(undefined);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || isFetching) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
-  if (isFetching) return <div>Fetching...</div>;
 
   const allUsers = data?.results ?? [];
 
@@ -86,11 +84,10 @@ const AllUser = () => {
                     />
                   </div>
                   <div>
-                    <Link to={`/book-details/${item.id}`}>
-                      <div className="font-bold  hover:underline hover:text-red-500">
-                        {item.user.first_name} {item.user.last_name}
-                      </div>
-                    </Link>
+                    <div className="font-bold  hover:underline hover:text-red-500">
+                      {item.user.first_name} {item.user.last_name}
+                    </div>
+
                     <div className="text-sm opacity-70 italic">
                       @{item.user.username}
                     </div>
