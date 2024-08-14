@@ -31,7 +31,7 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre)
     description = models.TextField()
     condition = models.CharField(max_length=100, choices=CONDITIONS)
-    image = models.ImageField(upload_to='books/',default='books/default.jpg')
+    image = models.CharField(max_length=200, blank=True, null=True)
     donated_by = models.ForeignKey(BookUser, related_name='donations', on_delete=models.SET_NULL, blank=True, null=True)
     claimed_by = models.ForeignKey(BookUser, related_name='claims', on_delete=models.SET_NULL, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
