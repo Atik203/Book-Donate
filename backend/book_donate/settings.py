@@ -115,7 +115,9 @@ WSGI_APPLICATION = 'book_donate.wsgi.application'
 # }
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://book_donate_71q3_user:PHlMnCRivkwLNiJBiqFBzZn5E31jxdwG@dpg-cqt3e6rv2p9s73eiktcg-a.oregon-postgres.render.com/book_donate_71q3'
+        default='postgresql://book_donate_71q3_user:PHlMnCRivkwLNiJBiqFBzZn5E31jxdwG@dpg-cqt3e6rv2p9s73eiktcg-a.oregon-postgres.render.com/book_donate_71q3',
+        conn_max_age=600,
+        ssl_require=True,
     )
 }
 # Password validation
