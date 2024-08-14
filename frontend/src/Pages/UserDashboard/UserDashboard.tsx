@@ -9,7 +9,7 @@ const UserDashboard = () => {
   const { data, isFetching, isLoading } = useGetSingleUserQuery(
     currentUser?.id as number
   );
-  const user = data?.data;
+  const user = data?.results[0];
   if (!currentUser || isFetching || isLoading) return <div>Loading...</div>;
 
   return (
@@ -18,7 +18,7 @@ const UserDashboard = () => {
         <div className="flex flex-col items-center">
           <img
             className="w-32 h-32 rounded-full border-4 border-indigo-500"
-            src={user.image as string}
+            src={user?.image}
             alt={`${user.user.first_name} ${user.user.last_name}`}
           />
           <h2 className="mt-4 text-2xl font-semibold text-gray-800">
