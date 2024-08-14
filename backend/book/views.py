@@ -128,7 +128,6 @@ class UserDonatedBooksView(generics.ListAPIView):
         return Book.objects.filter(donated_by__id=id)
     
 class AddBookView(APIView):
-    parser_classes = (FormParser, MultiPartParser)
     def post(self, request):
         serializer = AddBookSerializers(data=request.data,context={'request': request})
         if serializer.is_valid():
@@ -136,8 +135,6 @@ class AddBookView(APIView):
             return Response({'success': True, 'message': 'Book added successfully'})
         return Response(serializer.errors, status=400)
 class UpdateBookView(APIView):
-    parser_classes = (FormParser, MultiPartParser)
-    
     def put(self, request):
         book_id = int(request.data.get('id'))
         if not book_id:
