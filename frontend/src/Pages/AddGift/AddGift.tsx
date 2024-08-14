@@ -2,23 +2,28 @@ import { Helmet } from "react-helmet-async";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useAddGiftMutation } from "../../redux/features/gift/giftApi";
+import uploadImageToImgBB from "../../utils/uploadImageToImgBB";
 
 const AddGift = () => {
   const [AddGift] = useAddGiftMutation();
 
   const { register, handleSubmit, reset } = useForm();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const formData = new FormData();
-
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("point_cost", data.point_cost);
-    formData.append("stock", data.stock);
-    formData.append("image", data.image[0]);
-
     const toastId = toast.loading("Submitting...");
     try {
-      const result = await AddGift(formData).unwrap();
+      const imageUrl = await uploadImageToImgBB(data.image[0]);
+
+      if (!imageUrl) {
+        toast.error("Failed to upload image", { id: toastId });
+        return;
+      }
+
+      const submitData = {
+        ...data,
+        image: imageUrl,
+      };
+
+      const result = await AddGift(submitData).unwrap();
 
       if (result.success) {
         toast.success("Gift added successfully", { id: toastId });
