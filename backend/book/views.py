@@ -2,9 +2,8 @@ from django.db.models import Avg, Case, FloatField, IntegerField, Value, When
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
 from rest_framework import generics, serializers, status, viewsets
-from rest_framework.filters import BaseFilterBackend, SearchFilter
+from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
