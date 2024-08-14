@@ -166,7 +166,6 @@ class EditProfileView(APIView):
             user_instance = BookUser.objects.get(id=user_id)
         except BookUser.DoesNotExist:
             return Response({'error': 'User not found.'}, status=404)
-        
         serializer = EditProfileSerializer(user_instance, data=request.data, context={'request': request}, partial=True)
         if serializer.is_valid():
             serializer.save()
