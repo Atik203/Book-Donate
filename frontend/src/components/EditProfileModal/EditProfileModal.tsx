@@ -35,14 +35,16 @@ export default function EditProfileModal() {
       image: currentUser?.image || "",
     },
   });
-  console.log(currentUser);
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Updating Profile...");
+
     let imageUrl = currentUser?.image;
 
     // Check if the image field has a file selected
     if (data.image && data.image.length > 0) {
       imageUrl = await uploadImageToImgBB(data.image[0]);
-      if (!imageUrl) return toast.error("Failed to upload image");
+      if (!imageUrl)
+        return toast.error("Failed to upload image", { id: toastId });
     }
 
     const userData = {
@@ -54,14 +56,14 @@ export default function EditProfileModal() {
         first_name: data.firstName,
         last_name: data.lastName,
         username: data.username,
-        image: imageUrl,
       },
+      image: imageUrl,
     };
 
     try {
       const result = await updateProfile(userData).unwrap();
       if (result.success) {
-        toast.success("Profile updated successfully");
+        toast.success("Profile updated successfully", { id: toastId });
         const setUserData: TUser = {
           username: data.username,
           email: data.email,
@@ -76,14 +78,14 @@ export default function EditProfileModal() {
           claimed_books: currentUser?.claimed_books as TUser["claimed_books"],
         };
 
-        if (!token) return toast.error("Token not found");
+        if (!token) return toast.error("Token not found", { id: toastId });
         dispatch(setUser({ user: setUserData, token }));
         onOpenChange();
       } else {
-        toast.error("Failed to update profile");
+        toast.error("Failed to update profile", { id: toastId });
       }
     } catch (error) {
-      toast.error("Failed to update profile");
+      toast.error("Failed to update profile", { id: toastId });
     }
   };
 
