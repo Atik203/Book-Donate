@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -19,42 +19,37 @@ const Login = () => {
   const navigate = useNavigate();
   const [Login] = useLoginMutation();
   const [isVisible, setIsVisible] = useState<boolean>(false);
-
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: { userName: "Atik203", password: "abcd12345" },
   });
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const username = data.userName;
     const password = data.password;
-
     const userInfo = {
       username: username,
       password: password,
     };
 
     const toastId = toast.loading("Logging in...");
-    Login(userInfo)
-      .unwrap()
-      .then((res) => {
-        const token = res.token;
-        const user = res.user;
+    try {
+      const res = await Login(userInfo).unwrap();
+      const token = res?.token;
+      const user = res?.user;
 
-        if (!token || !user) {
-          toast.error("Invalid token or user", { id: toastId });
-          return;
-        }
-        dispatch(setUser({ token, user }));
-        toast.success("Logged in successfully", { id: toastId });
-        const from = (location?.state?.from as string) || "/";
+      if (!token || !user) {
+        toast.error("Invalid token or user", { id: toastId });
+        return;
+      }
+      dispatch(setUser({ token, user }));
+      toast.success("Logged in successfully", { id: toastId });
+      const from = (location?.state?.from as string) || "/";
 
-        navigate(from, { replace: true });
-      })
-      .catch((error) => {
-        const message = error.data.message;
-        toast.error(message, { id: toastId });
-      });
-  });
+      navigate(from, { replace: true });
+    } catch (error) {
+      toast.error("Failed to login", { id: toastId });
+    }
+  };
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
@@ -84,7 +79,7 @@ const Login = () => {
             </div>
             <div className="mt-8">
               <div>
-                <form onSubmit={onSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                   <div>
                     <label
                       htmlFor="username"

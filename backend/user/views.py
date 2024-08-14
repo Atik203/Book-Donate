@@ -69,7 +69,8 @@ class RegistrationView(APIView):
                 user.is_active = False
                 token = default_token_generator.make_token(user)
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
-                confirm_link = 'http://127.0.0.1:8000' + reverse('activate', args=[uid, token])
+                # https://book-donate-yo6k.onrender.com
+                confirm_link = 'https://book-donate-yo6k.onrender.com' + reverse('activate', args=[uid, token])
                 send_confirm_email(confirm_link,'Confirm Email','confirm_email.html',user.email)
                 return Response({'success': True, 'message': 'Account created successfully. Please confirm your email to login'})
         except Exception as e:
@@ -125,7 +126,8 @@ class LoginViewSet(APIView):
         except Exception as e:
             return Response({'error': str(e)})    
         return Response(serializer.errors)
-    
+
+
 
 class LogOutViewSet(APIView):
     def get(self, request):

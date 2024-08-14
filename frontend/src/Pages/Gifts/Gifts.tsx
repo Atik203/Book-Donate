@@ -108,7 +108,7 @@ const Gifts = () => {
                   <img
                     src={gift.image}
                     alt={gift.name}
-                    className="w-36 h-44 object-cover"
+                    className="w-36 h-44 object-contain"
                   />
                 </figure>
                 <div className="card-body flex flex-col flex-grow">
@@ -122,7 +122,7 @@ const Gifts = () => {
                       content: ["w-64"],
                     }}
                   >
-                    <p>{truncate(gift.description, { length: 30 })}</p>
+                    <p>{truncate(gift.description, { length: 50 })}</p>
                   </Tooltip>
 
                   <div className="flex items-center justify-between mt-4">

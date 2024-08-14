@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
 import environ
 
 env = environ.Env()
@@ -34,10 +35,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*'] # all hosts
 
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000','http://localhost:5173']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173','https://book-donate.vercel.app','https://book-donate-yo6k.onrender.com']
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    'https://book-donate.vercel.app',
+    'https://book-donate-yo6k.onrender.com',
+    # 'localhost:8000',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -103,14 +107,17 @@ WSGI_APPLICATION = 'book_donate.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://book_donate_71q3_user:PHlMnCRivkwLNiJBiqFBzZn5E31jxdwG@dpg-cqt3e6rv2p9s73eiktcg-a.oregon-postgres.render.com/book_donate_71q3'
+    )
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -144,8 +151,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 
