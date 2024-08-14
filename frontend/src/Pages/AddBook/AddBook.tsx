@@ -31,27 +31,16 @@ const AddBook = () => {
   const { register, handleSubmit, reset } = useForm();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const reward_point = user?.role === "Admin" ? data.reward_point : 0;
-
-    // const formData = new FormData();
-    // formData.append("title", data.title);
-    // formData.append("author", data.author);
-    // formData.append("stock", data.stock);
-    // formData.append("reward_point", reward_point.toString());
-    // formData.append("publisher", data.publisher);
-    // formData.append("publication_date", data.publication_date);
-    // formData.append("isbn", data.isbn);
-    // formData.append("pages", data.pages);
-    // formData.append("description", data.description);
-    // formData.append("image", data.image[0]);
-    // formData.append("donated_by", user?.id?.toString() as string);
-    // formData.append("genre", Array.from(values).join(","));
-    // // @ts-expect-error condition is string
-    // formData.append("condition", condition?.currentKey as string);
-    // formData.append("donated_by", user?.id?.toString() as string);
     const toastId = toast.loading("Submitting...");
     try {
       // Upload image to ImgBB
       const imageUrl = await uploadImageToImgBB(data.image[0]);
+
+      if (!imageUrl) {
+        toast.error("Failed to upload image", { id: toastId });
+        return;
+      }
+
       // Prepare the JSON data
       const bookData = {
         title: data.title,
@@ -75,7 +64,7 @@ const AddBook = () => {
       if (result.success) {
         toast.success("Book added successfully", { id: toastId });
         refetch();
-        reset();
+        // reset();
       } else {
         toast.error("Failed to add book", { id: toastId });
       }

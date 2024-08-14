@@ -94,6 +94,11 @@ const UpdateBook = () => {
       // Upload image to ImgBB
       const imageUrl = await uploadImageToImgBB(data.image[0]);
 
+      if (!imageUrl) {
+        toast.error("Failed to upload image", { id: toastId });
+        return;
+      }
+
       // Prepare the JSON data
       const bookData = {
         title: data.title,
