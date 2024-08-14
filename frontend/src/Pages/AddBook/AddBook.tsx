@@ -14,6 +14,7 @@ import { useGetDonatedBooksQuery } from "../../redux/features/user/userApi";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { genreKeyLabelGenerator } from "../../utils/genreKeyLabelGenerator";
+import uploadImageToImgBB from "../../utils/uploadImageToImgBB";
 
 const AddBook = () => {
   const user = useAppSelector((state: RootState) => state.user.user);
@@ -31,26 +32,45 @@ const AddBook = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const reward_point = user?.role === "Admin" ? data.reward_point : 0;
 
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("author", data.author);
-    formData.append("stock", data.stock);
-    formData.append("reward_point", reward_point.toString());
-    formData.append("publisher", data.publisher);
-    formData.append("publication_date", data.publication_date);
-    formData.append("isbn", data.isbn);
-    formData.append("pages", data.pages);
-    formData.append("description", data.description);
-    formData.append("image", data.image[0]);
-    formData.append("donated_by", user?.id?.toString() as string);
-    formData.append("genre", Array.from(values).join(","));
-    // @ts-expect-error condition is string
-    formData.append("condition", condition?.currentKey as string);
-    formData.append("donated_by", user?.id?.toString() as string);
-
+    // const formData = new FormData();
+    // formData.append("title", data.title);
+    // formData.append("author", data.author);
+    // formData.append("stock", data.stock);
+    // formData.append("reward_point", reward_point.toString());
+    // formData.append("publisher", data.publisher);
+    // formData.append("publication_date", data.publication_date);
+    // formData.append("isbn", data.isbn);
+    // formData.append("pages", data.pages);
+    // formData.append("description", data.description);
+    // formData.append("image", data.image[0]);
+    // formData.append("donated_by", user?.id?.toString() as string);
+    // formData.append("genre", Array.from(values).join(","));
+    // // @ts-expect-error condition is string
+    // formData.append("condition", condition?.currentKey as string);
+    // formData.append("donated_by", user?.id?.toString() as string);
     const toastId = toast.loading("Submitting...");
     try {
-      const result = await AddBook(formData).unwrap();
+      // Upload image to ImgBB
+      const imageUrl = await uploadImageToImgBB(data.image[0]);
+      // Prepare the JSON data
+      const bookData = {
+        title: data.title,
+        author: data.author,
+        stock: data.stock,
+        reward_point: reward_point,
+        publisher: data.publisher,
+        publication_date: data.publication_date,
+        isbn: data.isbn,
+        pages: data.pages,
+        description: data.description,
+        image: imageUrl,
+        donated_by: user?.id?.toString(),
+        genre: Array.from(values).join(","),
+        // @ts-expect-error it is string
+        condition: condition?.currentKey,
+      };
+
+      const result = await AddBook(bookData).unwrap();
 
       if (result.success) {
         toast.success("Book added successfully", { id: toastId });
