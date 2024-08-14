@@ -67,30 +67,18 @@ class PasswordChangeSerializer(serializers.Serializer):
         return data    
 
 class EditProfileSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(write_only=True)
-    image = serializers.CharField(required=False)
     user = UserSerializers(many=False, read_only=True)
+    image = serializers.CharField(required=False, allow_blank=True)
+
     class Meta:
         model = BookUser
         fields = ['id', 'phone', 'address', 'image', 'user']
 
     def update(self, instance, validated_data):
-        image = validated_data.pop('image', None)
-        if image:
-            instance.image = image
-        
-        user_data = validated_data.get('user')
-        if user_data:
-            instance.user.username = user_data.get('username', instance.user.username)
-            instance.user.first_name = user_data.get('first_name', instance.user.first_name)
-            instance.user.last_name = user_data.get('last_name', instance.user.last_name)
-            instance.user.email = user_data.get('email', instance.user.email)
-            instance.user.save()
-        
-        instance.phone = validated_data.get('phone', instance.phone)
-        instance.address = validated_data.get('address', instance.address)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
         instance.save()
-        return super().update(instance, validated_data)
+        return instance
     
 
 

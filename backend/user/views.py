@@ -158,26 +158,21 @@ class PasswordChangeViewSet(APIView):
 
 
 class EditProfileView(APIView):
-    serializer_class = EditProfileSerializer
-    
-    def post(self, request, *args, **kwargs):
-        return self.put(request, *args, **kwargs)
-    
-    def put(self, request, *args, **kwargs):
-        id = request.data.get('id')
-        if not id:
-            return Response({'error': 'ID is required'}, status=status.HTTP_400_BAD_REQUEST)
-        
+    def put(self, request):
+        user_id = int(request.data.get('id'))
+        if not user_id:
+            return Response({'error': 'User ID is required.'}, status=400)
         try:
-            user = BookUser.objects.get(id=id)
+            user_instance = BookUser.objects.get(id=user_id)
         except BookUser.DoesNotExist:
-            raise NotFound('BookUser matching query does not exist.')
+            return Response({'error': 'User not found.'}, status=404)
         
-        serializer = self.serializer_class(user, data=request.data, partial=True)
+        serializer = EditProfileSerializer(user_instance, data=request.data, context={'request': request}, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({'success': True, 'message': 'Profile Updated Successfully'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': True, 'message': 'Profile updated successfully'})
+        
+        return Response(serializer.errors, status=400)
 
 class DeleteUserView(APIView):
     parser_classes = [JSONParser]
