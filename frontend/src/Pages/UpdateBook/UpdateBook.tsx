@@ -78,9 +78,8 @@ const UpdateBook = () => {
     }
   }, [data, reset, isSuccess]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || isFetching) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
-  if (isFetching) return <div>Fetching...</div>;
   const book = data?.results[0];
 
   const genres = genreData?.results;
@@ -89,25 +88,32 @@ const UpdateBook = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const reward_point = user?.role === "Admin" ? data.reward_point : 0;
     const donated_by = book.donated_by?.id;
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("author", data.author);
-    formData.append("stock", data.stock);
-    formData.append("reward_point", reward_point.toString());
-    formData.append("publisher", data.publisher);
-    formData.append("publication_date", data.publication_date);
-    formData.append("isbn", data.isbn);
-    formData.append("pages", data.pages);
-    formData.append("description", data.description);
-    formData.append("image", data.image[0]);
-    formData.append("donated_by", donated_by.toString() as string);
-    formData.append("genre", Array.from(values).join(","));
-    formData.append("condition", Array.from(condition)[0]);
-    formData.append("id", book.id.toString());
 
     const toastId = toast.loading("Submitting...");
     try {
-      const result = await UpdateBook(formData).unwrap();
+      // Upload image to ImgBB
+      const imageUrl = await uploadImageToImgBB(data.image[0]);
+
+      // Prepare the JSON data
+      const bookData = {
+        title: data.title,
+        author: data.author,
+        stock: data.stock,
+        reward_point: reward_point,
+        publisher: data.publisher,
+        publication_date: data.publication_date,
+        isbn: data.isbn,
+        pages: data.pages,
+        description: data.description,
+        image: imageUrl,
+        donated_by: donated_by.toString(),
+        genre: Array.from(values).join(","),
+        condition: Array.from(condition)[0],
+        id: book.id.toString(),
+      };
+
+      // Send the JSON data
+      const result = await UpdateBook(bookData).unwrap();
 
       if (result.success) {
         toast.success("Book updated successfully", { id: toastId });
