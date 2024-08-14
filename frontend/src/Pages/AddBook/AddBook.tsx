@@ -3,6 +3,7 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { GENRE } from "../../components/BookFilter/BookFilter";
 import { CONDITION_OPTIONS } from "../../constants/book.contants";
@@ -19,6 +20,7 @@ import uploadImageToImgBB from "../../utils/uploadImageToImgBB";
 const AddBook = () => {
   const user = useAppSelector((state: RootState) => state.user.user);
   const { refetch } = useGetDonatedBooksQuery(user?.id as number);
+  const navigate = useNavigate();
 
   const { data: genreData } = useGetAllGenresQuery(undefined);
   const genres = genreData?.results;
@@ -64,7 +66,8 @@ const AddBook = () => {
       if (result.success) {
         toast.success("Book added successfully", { id: toastId });
         refetch();
-        // reset();
+        reset();
+        navigate(`/${user?.role}/dashboard`);
       } else {
         toast.error("Failed to add book", { id: toastId });
       }
