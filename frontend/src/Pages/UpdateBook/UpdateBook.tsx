@@ -126,7 +126,7 @@ const UpdateBook = () => {
         refetch();
         reset();
         refetchBook();
-        navigate(`/${user?.role}/dashboard/`);
+        navigate(`/book-details/${book.id}`);
       } else {
         toast.error("Failed to update book", { id: toastId });
       }
