@@ -60,9 +60,7 @@ export default function DashboardNavbar() {
     };
   }, []);
 
-  const menuItems = user
-    ? ["Home", "Books", "Contact Us", "Dashboard", "Log Out"]
-    : ["Home", "Books", "Contact Us"];
+  const menuItems = ["Home", "Books", "Gifts", "Contact Us", "About Us"];
 
   return isMobile ? (
     <Navbar
@@ -77,45 +75,83 @@ export default function DashboardNavbar() {
         />
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>
-          <RouterLink
-            to={"/sign-up"}
-            className={
-              location.pathname === "/sign-up"
-                ? "text-navPrimary"
-                : "text-black"
-            }
-          >
-            Sign Up
-          </RouterLink>
-        </NavbarItem>
-        <NavbarItem>
-          <RouterLink to="/login">
-            <button
-              className="btn bg-navPrimary text-white rounded-md px-3 hover:bg-gray-400
-                hover:text-black"
-            >
-              Login
-            </button>
-          </RouterLink>
-        </NavbarItem>
-      </NavbarContent>
-      <NavbarMenu>
-        {user && (
-          <NavbarMenuItem>
-            <div className="gems-style w-28 flex justify-center gap-3 py-2 px-3 items-center rounded-full">
+        {user ? (
+          <div className="flex items-center justify-center gap-2">
+            <div className="gems-style w-20 flex justify-center gap-2 py-2 px-2 items-center rounded-full">
               <div>
                 <img
                   src="https://web.programming-hero.com/static/media/gem.8e6eff96.svg"
-                  className="h-6 w-6"
+                  className="h-5 w-5"
                 />
               </div>
               <div>
-                <p className="font-bold text-xl">{reward_point}</p>
+                <p className="font-bold text-lg">{reward_point}</p>
               </div>
             </div>
-          </NavbarMenuItem>
+            <Dropdown placement="bottom-end">
+              <DropdownTrigger>
+                <Avatar
+                  isBordered
+                  as="button"
+                  className="transition-transform"
+                  color="secondary"
+                  size="sm"
+                  src={image as string}
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+                <DropdownItem key="profile" className="h-14 gap-2">
+                  <p className="font-bold text-navPrimary italic">{username}</p>
+                  <p className="font-medium">
+                    {first_name} {last_name}
+                  </p>
+                  <p className="font-medium">{email}</p>
+                </DropdownItem>
+                <DropdownItem key="settings">
+                  {" "}
+                  <RouterLink
+                    className="font-bold "
+                    to={`/${user.role}/dashboard/`}
+                  >
+                    Dashboard
+                  </RouterLink>
+                </DropdownItem>
+                <DropdownItem key="logout" color="danger">
+                  <button className="font-bold " onClick={handleLogout}>
+                    Logout
+                  </button>
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center gap-3">
+            <NavbarItem>
+              <RouterLink
+                to={"/sign-up"}
+                className={
+                  location.pathname === "/sign-up"
+                    ? "text-navPrimary"
+                    : "text-black"
+                }
+              >
+                Sign Up
+              </RouterLink>
+            </NavbarItem>
+            <NavbarItem>
+              <RouterLink to="/login">
+                <button
+                  className="btn bg-navPrimary text-white rounded-md px-3 hover:bg-gray-400
+                hover:text-black"
+                >
+                  Login
+                </button>
+              </RouterLink>
+            </NavbarItem>
+          </div>
         )}
+      </NavbarContent>
+      <NavbarMenu>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <RouterLink
