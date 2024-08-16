@@ -65,7 +65,7 @@ const BookListTable = () => {
             <th>Condition</th>
             <th>Claimed By</th>
             <th>Donated By</th>
-            <th>Actions</th>
+            <th className="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>

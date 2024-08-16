@@ -46,7 +46,7 @@ const MyDonatedBook = () => {
             <th>Condition</th>
             <th>Status</th>
             <th>Pages</th>
-            <th>Actions</th>
+            <th className="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
