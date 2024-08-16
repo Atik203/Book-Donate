@@ -8,6 +8,7 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { GENRE } from "../../components/BookFilter/BookFilter";
+import MultipleImageUploader from "../../components/MultipleImageUploader/MultipleImageUploader";
 import { CONDITION_OPTIONS } from "../../constants/book.contants";
 import {
   useGetAllGenresQuery,
@@ -25,6 +26,12 @@ const UpdateBook = () => {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const bookId = queryParams.get("id");
+
+  const [images, setImages] = useState<File[]>([]);
+  const [removedInitialImages, setRemovedInitialImages] = useState<string[]>(
+    []
+  );
+
   const {
     data,
     isError,
@@ -85,6 +92,7 @@ const UpdateBook = () => {
 
   const genres = genreData?.results;
   genreKeyLabelGenerator(genres);
+  const InitialImage = data?.results[0]?.image;
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const reward_point = user?.role === "Admin" ? data.reward_point : 0;
@@ -93,8 +101,24 @@ const UpdateBook = () => {
     const toastId = toast.loading("Submitting...");
     try {
       // Upload image to ImgBB
-      const imageUrl = await uploadImageToImgBB(data.image[0]);
+      const urls =
+        [InitialImage].filter(
+          (url: string) => !removedInitialImages.includes(url)
+        ) || [];
 
+      console.log("Initial URLs:", urls);
+
+      for (const file of images) {
+        try {
+          const url = await uploadImageToImgBB(file);
+          urls.push(url);
+        } catch (uploadError) {
+          toast.error("Failed to upload image", { id: toastId });
+          return;
+        }
+      }
+
+      const imageUrl = urls[0];
       if (!imageUrl) {
         toast.error("Failed to upload image", { id: toastId });
         return;
@@ -332,21 +356,12 @@ const UpdateBook = () => {
                   </div>
                   <div className="flex items-center justify-center gap-4">
                     <div className="min-w-[20rem] w-full">
-                      <label
-                        htmlFor="image"
-                        className="block text-sm font-bold leading-6 text-gray-900"
-                      >
-                        Image
-                      </label>
-                      <div className="mt-2 relative">
-                        <input
-                          id="image"
-                          type={"file"}
-                          required
-                          {...register("image")}
-                          className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
+                      <MultipleImageUploader
+                        images={images}
+                        setImages={setImages}
+                        setRemovedInitialImages={setRemovedInitialImages}
+                        initialImageUrls={[data.results[0]?.image]}
+                      />
                     </div>
                     <div className="min-w-[20rem] w-full">
                       <label
