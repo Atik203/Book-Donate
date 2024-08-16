@@ -1,17 +1,20 @@
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import MultipleImageUploader from "../../components/MultipleImageUploader/MultipleImageUploader";
 import { useAddGiftMutation } from "../../redux/features/gift/giftApi";
 import uploadImageToImgBB from "../../utils/uploadImageToImgBB";
 
 const AddGift = () => {
   const [AddGift] = useAddGiftMutation();
+  const [images, setImages] = useState<File[]>([]);
 
   const { register, handleSubmit, reset } = useForm();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Submitting...");
     try {
-      const imageUrl = await uploadImageToImgBB(data.image[0]);
+      const imageUrl = await uploadImageToImgBB(images[0]);
 
       if (!imageUrl) {
         toast.error("Failed to upload image", { id: toastId });
@@ -107,23 +110,7 @@ const AddGift = () => {
                       />
                     </div>
                   </div>
-                  <div className="min-w-[20rem] w-full">
-                    <label
-                      htmlFor="image"
-                      className="block text-sm font-bold leading-6 text-gray-900"
-                    >
-                      Image
-                    </label>
-                    <div className="mt-2 relative">
-                      <input
-                        id="image"
-                        type={"file"}
-                        required
-                        {...register("image")}
-                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
+
                   <div className="min-w-[20rem] w-full">
                     <label
                       htmlFor="description"
@@ -141,7 +128,12 @@ const AddGift = () => {
                       />
                     </div>
                   </div>
-
+                  <div className="min-w-[20rem] w-full">
+                    <MultipleImageUploader
+                      images={images}
+                      setImages={setImages}
+                    />
+                  </div>
                   <div className="mt-4">
                     <button
                       type="submit"
