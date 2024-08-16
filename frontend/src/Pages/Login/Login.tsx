@@ -220,7 +220,7 @@ const Login = () => {
         <div className="relative hidden w-0 flex-1 lg:block">
           <img
             className="absolute inset-0 w-3/4  object-cover mx-auto"
-            src="../../../public/login.svg"
+            src="https://i.ibb.co/JRSm35S/login.png"
             alt=""
           />
         </div>
