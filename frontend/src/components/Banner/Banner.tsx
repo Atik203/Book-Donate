@@ -1,6 +1,6 @@
 const Banner = () => {
   return (
-    <div className="mt-10 md:mt-12 lg:mt-28 mb-8">
+    <div className="mt-10 md:mt-20 lg:mt-28 mb-8">
       <div
         className="md:relative py-4 md:p-0 w-full md:h-[348px] lg:h-[500px] flex flex-col-reverse md:flex-row justify-center gap-6 bg-cover bg-center"
         style={{ backgroundImage: `url('/bannerSvg.svg')` }}
