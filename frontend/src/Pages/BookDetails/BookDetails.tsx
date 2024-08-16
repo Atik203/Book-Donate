@@ -151,13 +151,13 @@ const BookDetails = () => {
   };
 
   return (
-    <div className="my-20">
-      <div className="flex gap-8 justify-center mx-auto">
+    <div className="my-20 px-6">
+      <div className="flex gap-8 md:gap-12 flex-col md:flex-row justify-center mx-auto">
         <div className="">
           <img
             src={image}
             alt={title}
-            className="min-w-80 max-w-sm object-contain"
+            className="min-w-28 h-96 mx-auto md:h-fit md:min-w-52 lg:min-w-72 max-w-sm object-contain"
           />
         </div>
         <div className="">
@@ -214,7 +214,6 @@ const BookDetails = () => {
           </button>
         </div>
       </div>
-
       <div className="mt-8">
         <h2 className="text-xl font-semibold">Reviews</h2>
         {reviews?.length ? (
