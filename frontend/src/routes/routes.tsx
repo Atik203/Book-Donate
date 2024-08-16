@@ -2,9 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import AboutUs from "../Pages/AboutUs/AboutUs";
 import BookDetails from "../Pages/BookDetails/BookDetails";
 import Books from "../Pages/Books/Books";
+import ConfirmEmail from "../Pages/ConfirmEmail/ConfirmEmail";
 import ContactUs from "../Pages/ContactUs/ContactUs";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import FailedConfirmEmail from "../Pages/FailedConfirmEmail/FailedConfirmEmail";
 import Gifts from "../Pages/Gifts/Gifts";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
@@ -76,6 +78,14 @@ const router = createBrowserRouter([
       </PrivateRouteProvider>
     ),
     children: routeGenerator(userPaths),
+  },
+  {
+    path: "verification-success",
+    element: <ConfirmEmail />,
+  },
+  {
+    path: "verification-failed",
+    element: <FailedConfirmEmail />,
   },
 ]);
 
