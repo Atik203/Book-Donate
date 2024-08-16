@@ -1,6 +1,5 @@
-import { Avatar } from "@nextui-org/react";
+import { Avatar, Button } from "@nextui-org/react";
 import { Link } from "react-router-dom";
-import { EyeIcon } from "../../components/ui/EyeIcon";
 import { useGetClaimedBooksQuery } from "../../redux/features/user/userApi";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
@@ -68,14 +67,14 @@ const MyClaimedBook = () => {
                 {book.condition}
               </td>
               <td className="text-medium">{book.pages}</td>
-              <td>
+              <td className="flex items-center justify-center">
                 <Link to={`/book-details/${book.id}`}>
-                  <button
+                  <Button
                     title="Details"
-                    className="hover:text-navPrimary font-bold"
+                    className="hover:text-navPrimary hover:bg-gray-300 bg-green-500 text-white font-bold"
                   >
-                    <EyeIcon />
-                  </button>
+                    Details
+                  </Button>
                 </Link>
               </td>
             </tr>
