@@ -13,9 +13,8 @@ const GiftList = () => {
   const { data, isError, isFetching, isLoading, refetch } =
     useGetAllGiftsQuery(undefined);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || isFetching) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
-  if (isFetching) return <div>Fetching...</div>;
 
   const allGifts = data?.results ?? [];
 

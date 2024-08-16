@@ -51,7 +51,7 @@ const Gifts = () => {
   if (isError) return <div>Error</div>;
   if (isFetching) return <div>Fetching...</div>;
 
-  const gifts: TGift[] = data.results.slice(0, 4);
+  const gifts: TGift[] = data.results;
 
   const handleBuyGift = async (id: number) => {
     const submitDat = {
