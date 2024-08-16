@@ -39,7 +39,7 @@ const GiftList = () => {
             <th>Description</th>
             <th>Point Cost</th>
             <th>Stock</th>
-            <th>Actions</th>
+            <th className="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>

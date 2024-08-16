@@ -28,7 +28,7 @@ const MyClaimedBook = () => {
             <th>Publisher</th>
             <th>Condition</th>
             <th>Pages</th>
-            <th>Actions</th>
+            <th className="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>

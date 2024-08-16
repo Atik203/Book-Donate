@@ -59,13 +59,13 @@ const AllUser = () => {
     <div className="overflow-x-auto">
       <table className="table text-black">
         <thead className="text-lg font-semibold text-black">
-          <tr>
+          <tr className="">
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
             <th>Role</th>
             <th>Point</th>
-            <th>Actions</th>
+            <th className="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -106,7 +106,7 @@ const AllUser = () => {
               <td>{item.reward_point}</td>
               <td className="flex items-center justify-center gap-1">
                 {item.role === "User" ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
                     <button
                       onClick={() => makeAdmin(item.id)}
                       title="Delete"
