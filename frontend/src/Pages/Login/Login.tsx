@@ -20,7 +20,7 @@ const Login = () => {
   const [Login] = useLoginMutation();
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const { register, handleSubmit } = useForm<FormData>({
-    defaultValues: { userName: "Atik203", password: "abcd12345" },
+    defaultValues: { userName: "Atik", password: "abcd1234" },
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
