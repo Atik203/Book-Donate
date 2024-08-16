@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.encoding import force_bytes
@@ -81,9 +82,11 @@ def activate(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return JsonResponse({'success': True, 'message': 'Account activated successfully. Please login'})
+        # http://localhost:5173
+        # https://book-donate.vercel.app/
+        return redirect('https://book-donate.vercel.app/verification-success/')
     else:
-        return JsonResponse({'error': 'Activation link is invalid!'})
+        return redirect('https://book-donate.vercel.app/verification-failed/')
 
 
 class LoginViewSet(APIView):
