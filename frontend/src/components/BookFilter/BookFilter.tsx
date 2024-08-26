@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   cn,
-  Input,
   Pagination,
   PaginationItemRenderProps,
   PaginationItemType,
@@ -133,7 +132,7 @@ const BookFilter = () => {
           disabled={data?.prev === null || currentPage === 1}
           className={cn(
             className,
-            "bg-[#D9D9D9] text-[#5D94A6] min-w-12  w-12 h-12"
+            "bg-[#D9D9D9] text-[#5D94A6] min-w-12 w-12 h-12"
           )}
           onClick={() => setCurrentPage(currentPage - 1)}
         >
@@ -158,7 +157,10 @@ const BookFilter = () => {
           className,
           isActive && "text-black bg-[#72aeaa] text-2xl font-bold"
         )}
-        onClick={() => setPage(value)}
+        onClick={() => {
+          setPage(value);
+          setCurrentPage(value);
+        }}
       >
         {value}
       </button>
@@ -168,29 +170,20 @@ const BookFilter = () => {
   return (
     <div className="mx-auto my-20 mt-20 grid grid-cols-1 md:grid-cols-4 gap-6 w-[95%]">
       <div className="md:col-span-1">
-        <Input
-          className="mx-auto"
-          disabled
-          variant="bordered"
-          labelPlacement="outside"
-          size="lg"
-          classNames={{
-            label: "ml-2 no-asterisk",
-            errorMessage: "text-red-500 text-sm px-3",
-            input: "bg-white my-input text-[#E3C3C3]",
-            inputWrapper: "bg-white",
-          }}
-          placeholder={isAnyFilterSet ? "Clear filters" : "Filter books"}
-          startContent={
-            <FaFilter
-              onClick={handleResetFilter}
-              size={18}
-              className="text-[#E3C3C3] cursor-pointer text-2xl font-bold"
-              title="Click to reset filters"
-            />
-          }
-          type="search"
-        />
+        <div className="relative mx-auto flex items-center border border-gray-300 rounded-lg p-2">
+          <input
+            className="bg-white my-input w-full p-2 pl-10 rounded-lg"
+            placeholder={isAnyFilterSet ? "Clear filters" : "Filter books"}
+            type="search"
+            disabled
+          />
+          <FaFilter
+            onClick={handleResetFilter}
+            size={18}
+            className="absolute left-3 text-[#E3C3C3] cursor-pointer text-2xl font-bold"
+            title="Click to reset filters"
+          />
+        </div>
         <div className="my-2">
           <Select
             label="Genre"
@@ -264,31 +257,21 @@ const BookFilter = () => {
         </div>
       </div>
       <div className="md:col-span-3">
-        <Input
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="mx-auto"
-          radius="full"
-          variant="bordered"
-          size="lg"
-          labelPlacement="outside"
-          classNames={{
-            label: "ml-2 no-asterisk",
-            errorMessage: "text-red-500 text-sm px-3",
-            input: "bg-white font-bold my-input",
-            inputWrapper: "bg-white",
-          }}
-          placeholder="Type to search..."
-          startContent={
-            <IoSearchCircleOutline
-              className="text-[#E3C3C3] font-bold"
-              size={28}
-            />
-          }
-          type="search"
-        />
+        <div className="relative mx-auto flex items-center border border-gray-300 rounded-full p-2">
+          <IoSearchCircleOutline
+            className="absolute left-3 text-[#E3C3C3] font-bold"
+            size={28}
+          />
+          <input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-white font-bold my-input w-full p-2 pl-12 rounded-full"
+            placeholder="Type to search..."
+            type="search"
+          />
+        </div>
 
-        <div className="grid grid-cols-1 mt-2 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-4">
+        <div className="grid grid-cols-1 mt-2 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-2">
           {!isFetching &&
             !isLoading &&
             books &&

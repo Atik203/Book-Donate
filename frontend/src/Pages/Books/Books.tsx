@@ -9,18 +9,18 @@ import { useGetAllBooksQuery } from "../../redux/features/book/bookApi";
 import { TBook } from "../../types/book.types";
 const Books = () => {
   const { isDesktop, isTablet } = useDeviceDetect();
-  const cardsPerView = isDesktop ? 6 : isTablet ? 4 : 2;
+  const cardsPerView = isDesktop ? 4 : isTablet ? 2 : 1;
 
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, isFetching, isLoading, error } = useGetAllBooksQuery({
     page: currentPage,
-    page_size: 3,
+    page_size: 4,
   });
 
   const books = data?.results;
   const totalCount = data?.count ?? 0;
-  const totalPages = Math.ceil(totalCount / 3);
+  const totalPages = Math.ceil(totalCount / 4);
 
   if (error instanceof Error) {
     return <ErrorComponent message={error.message} />;
@@ -33,7 +33,7 @@ const Books = () => {
   return (
     <div className="mx-auto my-10 md:my-16">
       <Helmet>
-        <title>Service</title>
+        <title>Books</title>
       </Helmet>
       <TitleDescriptionBlock
         title="All Books"
@@ -41,14 +41,14 @@ const Books = () => {
       />
 
       {isFetching || isLoading ? (
-        <div className="w-10/12 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
+        <div className="mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-center justify-center gap-6">
           {Array.from({ length: cardsPerView }).map((_, index) => (
             <CardSkeleton key={index}></CardSkeleton>
           ))}
         </div>
       ) : (
         <div>
-          <div className="w-10/12 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
+          <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-center justify-center gap-6">
             {Array.isArray(books) &&
               books.map((book: TBook) => (
                 <PopularBookCard key={book.id} data={book} />

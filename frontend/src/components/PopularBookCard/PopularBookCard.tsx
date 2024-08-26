@@ -11,38 +11,36 @@ type TBookCardProps = {
 
 const PopularBookCard: React.FC<TBookCardProps> = ({ data }) => {
   return (
-    <div className="mx-auto flex flex-col items-center justify-center bg-white">
+    <div className="mx-auto flex flex-col items-center justify-center bg-white rounded-md h-[28rem]">
       <Image
-        width={300}
-        height={350}
         alt="Card background"
-        className="rounded-lg mx-auto p-0 m-0 h-[320px] w-64 md:w-72 object-contain"
+        className="pt-2 mx-auto  m-0 h-[260px] w-60 md:w-64 object-contain"
         src={`https://app.requestly.io/delay/2000/${data.image}`}
       />
-      <div className="px-6 py-3 flex-col items-start">
+      <div className="px-4 pb-2 flex-col items-start">
         <ul className="list-none p-0 m-0">
           {data.genre.map((genre, index) => (
             <li
               key={index}
-              className="inline-block mr-2 font-semibold cursor-pointer hover:underline hover:text-blue-500 "
+              className="inline-block mr-2 text-sm cursor-pointer hover:underline hover:text-blue-500 "
             >
               #{genre.name}
             </li>
           ))}
         </ul>
-        <h2 className="text-navPrimary uppercase font-bold">{data.title}</h2>
+        <h2 className="text-navPrimary font-semibold">{data.title}</h2>
         <p className="">
-          Author: <span className="font-semibold">{data.author}</span>
+          Author: <span className="">{data.author}</span>
         </p>
         <p className="">
           Condition:
-          <span className="font-semibold">{data.condition}</span>
+          <span className="">{data.condition}</span>
         </p>
         <p className="text-black text-justify">
           {truncate(data.description, { length: 50 })}
         </p>
         <Link to={`/book-details/${data.id}`}>
-          <p className="hover:text-navPrimary font-bold text-lg cursor-pointer">
+          <p className="hover:text-navPrimary text-end text-lg cursor-pointer">
             Details <FaArrowRight className="inline" />
           </p>
         </Link>
